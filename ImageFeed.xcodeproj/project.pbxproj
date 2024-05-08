@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		2F60F8EB2BE6F5E000DDD37B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F60F8EA2BE6F5E000DDD37B /* AppDelegate.swift */; };
 		2F60F8ED2BE6F5E000DDD37B /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F60F8EC2BE6F5E000DDD37B /* SceneDelegate.swift */; };
-		2F60F8EF2BE6F5E000DDD37B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F60F8EE2BE6F5E000DDD37B /* ViewController.swift */; };
+		2F60F8EF2BE6F5E000DDD37B /* ImagesListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F60F8EE2BE6F5E000DDD37B /* ImagesListViewController.swift */; };
 		2F60F8F22BE6F5E000DDD37B /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 2F60F8F12BE6F5E000DDD37B /* Base */; };
 		2F60F8F52BE6F5E000DDD37B /* ImageFeed.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2F60F8F32BE6F5E000DDD37B /* ImageFeed.xcdatamodeld */; };
 		2F60F8F72BE6F5E200DDD37B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2F60F8F62BE6F5E200DDD37B /* Assets.xcassets */; };
@@ -40,7 +40,7 @@
 		2F60F8E72BE6F5E000DDD37B /* ImageFeed.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ImageFeed.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2F60F8EA2BE6F5E000DDD37B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2F60F8EC2BE6F5E000DDD37B /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		2F60F8EE2BE6F5E000DDD37B /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		2F60F8EE2BE6F5E000DDD37B /* ImagesListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesListViewController.swift; sourceTree = "<group>"; };
 		2F60F8F12BE6F5E000DDD37B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		2F60F8F42BE6F5E000DDD37B /* ImageFeed.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ImageFeed.xcdatamodel; sourceTree = "<group>"; };
 		2F60F8F62BE6F5E200DDD37B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -101,13 +101,12 @@
 		2F60F8E92BE6F5E000DDD37B /* ImageFeed */ = {
 			isa = PBXGroup;
 			children = (
+				2F60F96A2BEBAD5500DDD37B /* Resources  */,
 				2F60F8EA2BE6F5E000DDD37B /* AppDelegate.swift */,
 				2F60F8EC2BE6F5E000DDD37B /* SceneDelegate.swift */,
-				2F60F8EE2BE6F5E000DDD37B /* ViewController.swift */,
+				2F60F8EE2BE6F5E000DDD37B /* ImagesListViewController.swift */,
 				2F60F8F02BE6F5E000DDD37B /* Main.storyboard */,
-				2F60F8F62BE6F5E200DDD37B /* Assets.xcassets */,
 				2F60F8F82BE6F5E200DDD37B /* LaunchScreen.storyboard */,
-				2F60F8FB2BE6F5E200DDD37B /* Info.plist */,
 				2F60F8F32BE6F5E000DDD37B /* ImageFeed.xcdatamodeld */,
 			);
 			path = ImageFeed;
@@ -128,6 +127,15 @@
 				2F60F9102BE6F5E200DDD37B /* ImageFeedUITestsLaunchTests.swift */,
 			);
 			path = ImageFeedUITests;
+			sourceTree = "<group>";
+		};
+		2F60F96A2BEBAD5500DDD37B /* Resources  */ = {
+			isa = PBXGroup;
+			children = (
+				2F60F8FB2BE6F5E200DDD37B /* Info.plist */,
+				2F60F8F62BE6F5E200DDD37B /* Assets.xcassets */,
+			);
+			path = "Resources ";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -261,7 +269,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2F60F8EF2BE6F5E000DDD37B /* ViewController.swift in Sources */,
+				2F60F8EF2BE6F5E000DDD37B /* ImagesListViewController.swift in Sources */,
 				2F60F8F52BE6F5E000DDD37B /* ImageFeed.xcdatamodeld in Sources */,
 				2F60F8EB2BE6F5E000DDD37B /* AppDelegate.swift in Sources */,
 				2F60F8ED2BE6F5E000DDD37B /* SceneDelegate.swift in Sources */,
@@ -448,7 +456,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = ZRDP3KUYDD;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = ImageFeed/Info.plist;
+				INFOPLIST_FILE = "ImageFeed/Resources /Info.plist";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -482,7 +490,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = ZRDP3KUYDD;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = ImageFeed/Info.plist;
+				INFOPLIST_FILE = "ImageFeed/Resources /Info.plist";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
