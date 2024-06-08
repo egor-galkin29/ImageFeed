@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2F1405AE2C14EFDF00882D2E /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F1405AD2C14EFDF00882D2E /* Constants.swift */; };
 		2F2F411E2BFAC37D00070F39 /* SingleImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F2F411D2BFAC37D00070F39 /* SingleImageViewController.swift */; };
 		2F60F8EB2BE6F5E000DDD37B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F60F8EA2BE6F5E000DDD37B /* AppDelegate.swift */; };
 		2F60F8ED2BE6F5E000DDD37B /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F60F8EC2BE6F5E000DDD37B /* SceneDelegate.swift */; };
@@ -40,6 +41,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2F1405AD2C14EFDF00882D2E /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		2F2F411D2BFAC37D00070F39 /* SingleImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleImageViewController.swift; sourceTree = "<group>"; };
 		2F60F8E72BE6F5E000DDD37B /* ImageFeed.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ImageFeed.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2F60F8EA2BE6F5E000DDD37B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -117,6 +119,7 @@
 			children = (
 				2F60F8EA2BE6F5E000DDD37B /* AppDelegate.swift */,
 				2F60F8EC2BE6F5E000DDD37B /* SceneDelegate.swift */,
+				2F1405AD2C14EFDF00882D2E /* Constants.swift */,
 				2F60F8F32BE6F5E000DDD37B /* ImageFeed.xcdatamodeld */,
 				2F60F9EC2BEC5B9500DDD37B /* Presentation */,
 				2F60F96A2BEBAD5500DDD37B /* Resources  */,
@@ -317,6 +320,7 @@
 				2F60F9EE2BEC5BC200DDD37B /* ImagesListCell.swift in Sources */,
 				2F60F8EB2BE6F5E000DDD37B /* AppDelegate.swift in Sources */,
 				2F60F8ED2BE6F5E000DDD37B /* SceneDelegate.swift in Sources */,
+				2F1405AE2C14EFDF00882D2E /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
