@@ -52,7 +52,7 @@ final class OAuth2Service {
          return request
      }
     
-    func fetchOAuthToken(code: String, handler: @escaping (Result<String, Error>) -> Void) {
+    func fetchOAuthToken(_ code: String, handler: @escaping (Result<String, Error>) -> Void) {
         let request = makeOAuthTokenRequest(code: code)
         networkClient.data(for: request) { result in
             switch result {
