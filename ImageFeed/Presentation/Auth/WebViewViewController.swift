@@ -29,8 +29,11 @@ final class WebViewViewController: UIViewController {
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         
-        webView.addObserver(self, forKeyPath: #keyPath(WKWebView.estimatedProgress), options: .new, context: nil)
-
+        webView.removeObserver(
+                   self,
+                   forKeyPath: #keyPath(WKWebView.estimatedProgress),
+                   context: nil
+               )
     }
     override func observeValue(
         forKeyPath keyPath: String?,
