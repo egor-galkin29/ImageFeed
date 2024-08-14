@@ -101,6 +101,7 @@
 		2F00DC892C5C164400373FA0 /* Auth */ = {
 			isa = PBXGroup;
 			children = (
+				2F0D15BE2C6CA83300E11209 /* NetworkClient */,
 				2F00DC922C6948FE00373FA0 /* Auth2Services */,
 				2F00DC872C5C129500373FA0 /* AuthViewController.swift */,
 				2F00DC8A2C5C166B00373FA0 /* WebViewViewController.swift */,
@@ -123,6 +124,14 @@
 				2F00DC952C69495D00373FA0 /* SplashViewController.swift */,
 			);
 			path = SplasScreen;
+			sourceTree = "<group>";
+		};
+		2F0D15BE2C6CA83300E11209 /* NetworkClient */ = {
+			isa = PBXGroup;
+			children = (
+				2F00DC8E2C64172F00373FA0 /* NetworkClient.swift */,
+			);
+			path = NetworkClient;
 			sourceTree = "<group>";
 		};
 		2F2F411C2BFAC36B00070F39 /* SingleImageView */ = {
@@ -162,7 +171,6 @@
 				2F60F8F32BE6F5E000DDD37B /* ImageFeed.xcdatamodeld */,
 				2F60F9EC2BEC5B9500DDD37B /* Presentation */,
 				2F60F96A2BEBAD5500DDD37B /* Resources  */,
-				2F00DC8E2C64172F00373FA0 /* NetworkClient.swift */,
 			);
 			path = ImageFeed;
 			sourceTree = "<group>";

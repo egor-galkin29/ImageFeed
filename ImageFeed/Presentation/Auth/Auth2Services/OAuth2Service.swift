@@ -7,7 +7,11 @@ final class OAuth2Service {
     private let networkClient: NetworkRouting
     private let tokenStorage = OAuth2TokenStorage()
 
-    init(networkClient: NetworkRouting) {
+    private enum JSONError: Error {
+            case decodingError
+        }
+    
+    private init(networkClient: NetworkRouting) {
         self.networkClient = networkClient
     }
     
@@ -36,24 +40,28 @@ final class OAuth2Service {
             }
         }
         
-    func makeOAuthTokenRequest(code: String) -> URLRequest {
-         let baseURL = URL(string: "https://unsplash.com")!
-         let url = URL(
-             string: "/oauth/token"
-             + "?client_id=\(Constants.accessKey)"
-             + "&&client_secret=\(Constants.secretKey)"
-             + "&&redirect_uri=\(Constants.redirectURI)"
-             + "&&code=\(code)"
-             + "&&grant_type=authorization_code",
-             relativeTo: baseURL
-         )!
-         var request = URLRequest(url: url)
-         request.httpMethod = "POST"
-         return request
-     }
+    func makeOAuthTokenRequest(code: String) -> URLRequest? {
+             let baseURL = URL(string: "https://unsplash.com")
+             guard let url = URL(
+                 string: "/oauth/token"
+                 + "?client_id=\(Constants.accessKey)"
+                 + "&&client_secret=\(Constants.secretKey)"
+                 + "&&redirect_uri=\(Constants.redirectURI)"
+                 + "&&code=\(code)"
+                 + "&&grant_type=authorization_code",
+                 relativeTo: baseURL
+             ) else {
+                 return nil
+             }
+             var request = URLRequest(url: url)
+             request.httpMethod = "POST"
+             return request
+         }
     
     func fetchOAuthToken(_ code: String, handler: @escaping (Result<String, Error>) -> Void) {
-        let request = makeOAuthTokenRequest(code: code)
+        guard let request = makeOAuthTokenRequest(code: code) else {
+            fatalError("Unable to create fetch authorization token request")
+        }
         networkClient.data(for: request) { result in
             switch result {
             case .success(let data):
@@ -62,12 +70,12 @@ final class OAuth2Service {
                     handler(.success(response.accessToken))
                     print("accessToken: \(response.accessToken) have been decoded")
                 } catch {
-                    handler(.failure(error))
-                    print("failed decode")
+                    handler(.failure(JSONError.decodingError))
+                    print("JSON decoding error \(error.localizedDescription)")
                 }
             case .failure(let error):
                 handler(.failure(error))
-                print("failed authorisation")
+                print(error.localizedDescription)
             }
         }
     }
