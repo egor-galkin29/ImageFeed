@@ -5,8 +5,18 @@ import UIKit
 final class ProfileViewController: UIViewController {
     private let imageView = UIImageView()
     
+    let profileService = ProfileService.shared
+    private let tokenStorage = OAuth2TokenStorage()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        guard let token = tokenStorage.token else {
+            print("Fail to find token")
+        }
+        
+        profileService.fetchProfile(token) {
+            
+        }
         
         addProfileImage()
         addLables()

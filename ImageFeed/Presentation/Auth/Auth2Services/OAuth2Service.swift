@@ -4,14 +4,20 @@ final class OAuth2Service {
     
     static let shared = OAuth2Service(networkClient: NetworkClient())
     
-    private let networkClient: NetworkRouting
+    private var networkClient: NetworkClient
     private let tokenStorage = OAuth2TokenStorage()
-
+    
+    private var lastCode: String?
+    
     private enum JSONError: Error {
             case decodingError
         }
     
-    private init(networkClient: NetworkRouting) {
+    private enum AuthServiceError: Error {
+        case invalidRequest
+    }
+    
+    private init(networkClient: NetworkClient) {
         self.networkClient = networkClient
     }
     
@@ -59,23 +65,38 @@ final class OAuth2Service {
          }
     
     func fetchOAuthToken(_ code: String, handler: @escaping (Result<String, Error>) -> Void) {
+        assert(Thread.isMainThread)
+        
         guard let request = makeOAuthTokenRequest(code: code) else {
             fatalError("Unable to create fetch authorization token request")
         }
-        networkClient.data(for: request) { result in
-            switch result {
-            case .success(let data):
-                do {
-                    let response = try JSONDecoder().decode(OAuth2Service.OAuthTokenResponseBody.self, from: data)
-                    handler(.success(response.accessToken))
-                    print("accessToken: \(response.accessToken) have been decoded")
-                } catch {
-                    handler(.failure(JSONError.decodingError))
-                    print("JSON decoding error \(error.localizedDescription)")
+        
+        guard lastCode != code else {
+                    handler(.failure(AuthServiceError.invalidRequest))
+                    return
                 }
-            case .failure(let error):
-                handler(.failure(error))
-                print(error.localizedDescription)
+        
+        networkClient.task?.cancel()
+        lastCode = code
+        
+        networkClient.data(for: request) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let data):
+                    do {
+                        let response = try JSONDecoder().decode(OAuth2Service.OAuthTokenResponseBody.self, from: data)
+                        handler(.success(response.accessToken))
+                        print("accessToken: \(response.accessToken) have been decoded")
+                    } catch {
+                        handler(.failure(JSONError.decodingError))
+                        print("JSON decoding error \(error.localizedDescription)")
+                    }
+                case .failure(let error):
+                    handler(.failure(error))
+                    print(error.localizedDescription)
+                }
+                self.networkClient.task = nil
+                self.lastCode = nil
             }
         }
     }

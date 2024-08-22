@@ -1,10 +1,6 @@
 import Foundation
 
-protocol NetworkRouting {
-    func data(for request: URLRequest, completion: @escaping (Result<Data, Error>) -> Void)
-}
-
-struct NetworkClient: NetworkRouting {
+struct NetworkClient {
     private enum NetworkError: Error {
             case httpStatusCode(Int)
             case urlRequestError(Error)
@@ -16,7 +12,9 @@ struct NetworkClient: NetworkRouting {
             case serverError
         }
     
-    func data(for request: URLRequest, completion: @escaping (Result<Data, Error>) -> Void) {
+    var task: URLSessionTask?
+    
+    mutating func data(for request: URLRequest, completion: @escaping (Result<Data, Error>) -> Void) {
         
         let fulfillCompletionOnTheMainThread: (Result<Data, Error>) -> Void = { result in
             DispatchQueue.main.async {
@@ -59,6 +57,7 @@ struct NetworkClient: NetworkRouting {
                 fulfillCompletionOnTheMainThread(.failure(NetworkError.urlSessionError))
             }
         }
+        self.task = task
         task.resume()
     }
 }
