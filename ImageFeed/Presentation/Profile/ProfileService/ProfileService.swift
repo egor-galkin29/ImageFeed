@@ -74,11 +74,14 @@ final class ProfileService {
                 do {
                     let response = try JSONDecoder().decode(ProfileResult.self, from: data)
                     self.profile = Profile(username: response.username, firstname: response.firstName, lastname: response.lastName, bio: response.bio)
+                    print("profile was decoded")
                     
                     if let profile = self.profile {
                         completion(.success(profile))
+                        print("success")
                     } else {
                         completion(.failure(ProfileServiceError.profileNotFound))
+                        print("fail")
                     }
                 } catch {
                     completion(.failure(JSONError.decodingError))
