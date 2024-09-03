@@ -2,12 +2,14 @@ import UIKit
 
 final class OAuth2Service {
     
-    static let shared = OAuth2Service(networkClient: NetworkClient())
+    static let shared = OAuth2Service()
     
-    private var networkClient: NetworkClient
+    let urlSession = URLSession.shared
+    
     private let tokenStorage = OAuth2TokenStorage()
     
     private var lastCode: String?
+    private var task: URLSessionTask?
     
     private enum JSONError: Error {
             case decodingError
@@ -17,9 +19,7 @@ final class OAuth2Service {
         case invalidRequest
     }
     
-    private init(networkClient: NetworkClient) {
-        self.networkClient = networkClient
-    }
+    private init() {}
     
     struct OAuthTokenResponseBody: Decodable {
             let accessToken: String
@@ -66,38 +66,48 @@ final class OAuth2Service {
     
     func fetchOAuthToken(_ code: String, handler: @escaping (Result<String, Error>) -> Void) {
         assert(Thread.isMainThread)
-        
-        guard let request = makeOAuthTokenRequest(code: code) else {
-            fatalError("Unable to create fetch authorization token request")
-        }
-        
-        guard lastCode != code else {
+                guard lastCode != code else {
+                    handler(.failure(AuthServiceError.invalidRequest))
+                    return
+                }
+                
+                task?.cancel()
+                lastCode = code
+                
+                guard let request = makeOAuthTokenRequest(code: code) else {
                     handler(.failure(AuthServiceError.invalidRequest))
                     return
                 }
         
-        networkClient.task?.cancel()
-        lastCode = code
-        
-        networkClient.data(for: request) { result in
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let data):
-                    do {
-                        let response = try JSONDecoder().decode(OAuth2Service.OAuthTokenResponseBody.self, from: data)
-                        handler(.success(response.accessToken))
-                        print("accessToken: \(response.accessToken) have been decoded")
-                    } catch {
-                        handler(.failure(JSONError.decodingError))
-                        print("JSON decoding error \(error.localizedDescription)")
+        let task = urlSession.objectTask(for: request) { [weak self] (result: Result<OAuthTokenResponseBody, Error>) in
+                    DispatchQueue.main.async {
+                        guard let self else { return }
+                            
+                        switch result {
+                        case .success(let tokenResponse):
+                            self.tokenStorage.token = tokenResponse.accessToken
+                            handler(.success(tokenResponse.accessToken))
+                        case .failure(let error):
+                            if let networkError = error as? NetworkError {
+                                switch networkError {
+                                case .httpStatusCode(let statusCode):
+                                    print("HTTP status code error: \(statusCode)")
+                                case .urlRequestError(let requestError):
+                                    print("URL request error: \(requestError)")
+                                case .urlSessionError:
+                                    print("URL session error: \(error)")
+                                }
+                            } else {
+                                print("Other network error: \(error)")
+                            }
+                            handler(.failure(error))
+                        }
+                        self.task = nil
+                        self.lastCode = nil
                     }
-                case .failure(let error):
-                    handler(.failure(error))
-                    print(error.localizedDescription)
                 }
-                self.networkClient.task = nil
+                self.task = task
+                task.resume()
                 self.lastCode = nil
-            }
-        }
     }
 }

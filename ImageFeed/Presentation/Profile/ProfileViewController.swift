@@ -1,4 +1,5 @@
 import UIKit
+import Kingfisher
 
 final class ProfileViewController: UIViewController {
     let profileService = ProfileService.shared
@@ -41,25 +42,75 @@ final class ProfileViewController: UIViewController {
             return label
         }()
     
+    override init(nibName: String?, bundle: Bundle?) {
+            super.init(nibName: nibName, bundle: bundle)
+            addObserver()
+        }
+    
+    required init?(coder: NSCoder) {
+            super.init(coder: coder)
+            addObserver()
+        }
+    
+    deinit {
+            removeObserver()
+        }
+    
+    private func addObserver() {
+            NotificationCenter.default.addObserver(
+                self,
+                selector: #selector(updateAvatar(notification:)),
+                name: ProfileImageService.didChangeNotification,
+                object: nil)
+        }
+       
+       private func removeObserver() {
+            NotificationCenter.default.removeObserver(
+                self,
+                name: ProfileImageService.didChangeNotification,
+                object: nil)
+        }
+       
+        @objc
+        private func updateAvatar(notification: Notification) {
+            guard
+                isViewLoaded,
+                let userInfo = notification.userInfo,
+                let profileImageURL = userInfo["URL"] as? String,
+                let url = URL(string: profileImageURL)
+            else { return }
+            
+            imageView.kf.setImage(with: url) { result in
+                    switch result {
+                    case .success(let value):
+                        print("Image: \(value.image); Image URL: \(value.source.url?.absoluteString ?? "")")
+                    case .failure(let error):
+                        print("Error: \(error)")
+                }
+            }
+        }
+    
     override func viewDidLoad() {
-            super.viewDidLoad()
-        guard let token = tokenStorage.token else {
-            return
-        }
+        super.viewDidLoad()
         
-        guard let profile = profileService.profile else {
-                   print("No profile found")
-                   return
-               }
-        
-        profileService.fetchProfile(token) {_ in
-            self.nameLabel.text = profile.name
-            self.nickNameLabel.text = profile.loginName
-            self.statusLable.text = profile.bio
-        }
-        
+        if let avatarURL = ProfileImageService.shared.avatarURL,
+           let url = URL(string: avatarURL) {
+            // TODO [Sprint 11]  Обновите аватар, если нотификация
+            
+            updateLableText()
             setup()
         }
+    }
+    
+    func updateLableText() {
+        if let profile = profileService.profile {
+            nameLabel.text = profile.name
+            nickNameLabel.text = profile.loginName
+            statusLable.text = profile.bio
+        } else {
+            print("profile was not found")
+        }
+    }
         
         private func setup() {
             setupView()
