@@ -87,7 +87,7 @@ final class ProfileService {
                 DispatchQueue.main.async {
                     switch result {
                     case .success(let profileResult):
-                        let profile = Profile(username: profileResult.username, firstname: profileResult.firstName, lastname:profileResult.lastName, bio: profileResult.bio)
+                        let profile = Profile(username: profileResult.username, firstname: profileResult.firstName, lastname: profileResult.lastName, bio: profileResult.bio)
                             self?.profile = profile
                             completion(.success(profile))
                     case .failure(let error):

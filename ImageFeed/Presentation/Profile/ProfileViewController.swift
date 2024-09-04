@@ -42,65 +42,34 @@ final class ProfileViewController: UIViewController {
             return label
         }()
     
-    override init(nibName: String?, bundle: Bundle?) {
-            super.init(nibName: nibName, bundle: bundle)
-            addObserver()
-        }
-    
-    required init?(coder: NSCoder) {
-            super.init(coder: coder)
-            addObserver()
-        }
-    
-    deinit {
-            removeObserver()
-        }
-    
-    private func addObserver() {
-            NotificationCenter.default.addObserver(
-                self,
-                selector: #selector(updateAvatar(notification:)),
-                name: ProfileImageService.didChangeNotification,
-                object: nil)
-        }
+    private var profileImageServiceObserver: NSObjectProtocol?
        
-       private func removeObserver() {
-            NotificationCenter.default.removeObserver(
-                self,
-                name: ProfileImageService.didChangeNotification,
-                object: nil)
-        }
-       
-        @objc
-        private func updateAvatar(notification: Notification) {
-            guard
-                isViewLoaded,
-                let userInfo = notification.userInfo,
-                let profileImageURL = userInfo["URL"] as? String,
-                let url = URL(string: profileImageURL)
-            else { return }
+        override func viewDidLoad() {
+            super.viewDidLoad()
             
-            imageView.kf.setImage(with: url) { result in
-                    switch result {
-                    case .success(let value):
-                        print("Image: \(value.image); Image URL: \(value.source.url?.absoluteString ?? "")")
-                    case .failure(let error):
-                        print("Error: \(error)")
+            profileImageServiceObserver = NotificationCenter.default
+                .addObserver(
+                    forName: ProfileImageService.didChangeNotification,
+                    object: nil,
+                    queue: .main
+                ) { [weak self] _ in
+                    guard let self = self else { return }
+                    self.updateAvatar()
                 }
-            }
-        }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        if let avatarURL = ProfileImageService.shared.avatarURL,
-           let url = URL(string: avatarURL) {
-            // TODO [Sprint 11]  Обновите аватар, если нотификация
-            
+            updateAvatar()     
             updateLableText()
             setup()
         }
-    }
+        
+        private func updateAvatar() {                                   
+            guard
+                let profileImageURL = ProfileImageService.shared.avatarURL,
+                let url = URL(string: profileImageURL)
+            else { return }
+            imageView.kf.setImage(with: url)
+        }
+    
+
     
     func updateLableText() {
         if let profile = profileService.profile {
