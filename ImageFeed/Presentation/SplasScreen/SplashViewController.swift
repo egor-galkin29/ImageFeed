@@ -2,7 +2,6 @@ import Foundation
 import UIKit
 
 final class SplashViewController: UIViewController {
-    private let showAuthenticationScreenSegueIdentifier = "ShowAuthenticationScreen"
     private let storage = OAuth2TokenStorage()
     private let profileService = ProfileService.shared
     let oauth2Service = OAuth2Service.shared
@@ -14,8 +13,10 @@ final class SplashViewController: UIViewController {
         if let token = storage.token {
             fetchPofile(token)
         } else {
-            performSegue(withIdentifier: showAuthenticationScreenSegueIdentifier, sender: nil)
+           print("ERROR: the tokeen was not found")
         }
+        setUpSplashScreen()
+        showAuthViewController()
     }
     
     private func switchToTabBarController() {
