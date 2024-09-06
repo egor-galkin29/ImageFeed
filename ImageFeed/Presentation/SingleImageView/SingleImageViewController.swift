@@ -1,17 +1,15 @@
 import UIKit
 
-// MARK: - SingleImageViewController
-
 final class SingleImageViewController: UIViewController {
     var image: UIImage? {
-            didSet {
-                guard isViewLoaded, let image else { return }
-                
-                imageView.image = image
-                imageView.frame.size = image.size
-                rescaleAndCenterImageInScrollView(image: image)
-            }
+        didSet {
+            guard isViewLoaded, let image else { return }
+            
+            imageView.image = image
+            imageView.frame.size = image.size
+            rescaleAndCenterImageInScrollView(image: image)
         }
+    }
     
     @IBOutlet private var scrollView: UIScrollView!
     @IBOutlet private var imageView: UIImageView!

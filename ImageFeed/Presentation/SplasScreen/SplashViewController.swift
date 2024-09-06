@@ -13,7 +13,7 @@ final class SplashViewController: UIViewController {
         if let token = storage.token {
             fetchPofile(token)
         } else {
-           print("ERROR: the tokeen was not found")
+            print("ERROR: the tokeen was not found")
         }
         setUpSplashScreen()
         showAuthViewController()
@@ -27,28 +27,28 @@ final class SplashViewController: UIViewController {
     }
     
     private func setUpSplashScreen() {
-            let splashImageView = UIImageView()
-            splashImageView.translatesAutoresizingMaskIntoConstraints = false
-            splashImageView.image = UIImage(named: "lounch_screen_logo")
-            splashImageView.backgroundColor = UIColor.ypBlack
-            view.addSubview(splashImageView)
-            splashImageView.heightAnchor.constraint(equalToConstant: 75).isActive = true
-            splashImageView.widthAnchor.constraint(equalToConstant: 75).isActive = true
-            splashImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-            splashImageView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
-        }
+        let splashImageView = UIImageView()
+        splashImageView.translatesAutoresizingMaskIntoConstraints = false
+        splashImageView.image = UIImage(named: "lounch_screen_logo")
+        splashImageView.backgroundColor = UIColor.ypBlack
+        view.addSubview(splashImageView)
+        splashImageView.heightAnchor.constraint(equalToConstant: 75).isActive = true
+        splashImageView.widthAnchor.constraint(equalToConstant: 75).isActive = true
+        splashImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        splashImageView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+    }
     
     private func showAuthViewController() {
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            guard let authViewController = storyboard.instantiateViewController(withIdentifier: "AuthViewController") as? AuthViewController else {
-                print("ERROR: with AuthViewController")
-                return
-            }
-            authViewController.delegate = self
-            authViewController.modalPresentationStyle = .fullScreen
-            
-            present(authViewController, animated: true, completion: nil)
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        guard let authViewController = storyboard.instantiateViewController(withIdentifier: "AuthViewController") as? AuthViewController else {
+            print("ERROR: with AuthViewController")
+            return
         }
+        authViewController.delegate = self
+        authViewController.modalPresentationStyle = .fullScreen
+        
+        present(authViewController, animated: true, completion: nil)
+    }
     
     private func fetchPofile(_ token: String) {
         UIBlockingProgressHUD.show()
