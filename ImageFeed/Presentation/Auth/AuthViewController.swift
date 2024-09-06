@@ -53,7 +53,8 @@ extension AuthViewController: WebViewViewControllerDelegate {
                 print("actual token: \(token)")
                 delegate?.didAuthenticate(self, didAuthenticateWithCode: code)
             case .failure:
-                print("лох") 
+                print("Пздравляю вы нашли пасхалку")
+                print("лох")
                 showNetworkError()
             }
             
