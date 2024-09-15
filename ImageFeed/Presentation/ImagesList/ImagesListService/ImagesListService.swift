@@ -6,7 +6,9 @@
 //
 
 import Foundation
-
+private enum PhotosResponseError: Error {
+    case defaultError
+}
 struct UrlsResult: Codable {
     let full: String
     let thumb: String
@@ -45,12 +47,17 @@ class ImagesListService {
     private var isFetching = false
     private var currentPage = 0
     
-    func fetchPhotosNextPage() {
+    func fetchPhotosNextPage(completion: @escaping (Error?) -> Void) {
         guard !isFetching else { return }
         
         isFetching = true
         currentPage += 1
         
+        let completionOnMainTheard:(Error?) -> Void = { error in
+            DispatchQueue.main.async {
+                completion(error)
+            }
+        }
         guard let request = makeFetchPhotosRequest(nextPage: currentPage) else {
             isFetching = false
             return
@@ -62,8 +69,10 @@ class ImagesListService {
                 switch result {
                 case .success(let photoResult):
                     self?.processServerResponse(photoResult: photoResult)
+                    completionOnMainTheard(nil)
                 case .failure:
                     self?.currentPage -= 1
+                    completionOnMainTheard(PhotosResponseError.defaultError)
                 }
             }
         }

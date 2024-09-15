@@ -5,12 +5,11 @@ import UIKit
 final class ImagesListCell: UITableViewCell {
     static let reuseIdentifier = "ImagesListCell"
     
-    @IBOutlet private var cellImage: UIImageView!
+    @IBOutlet var cellImage: UIImageView!
     @IBOutlet private var likeButton: UIButton!
     @IBOutlet private var dateLable: UILabel!
     
-    func configure(cell: ImagesListCell, image: UIImage, text: String, likeImageName: String) {
-        cell.cellImage.image = image
+    func configure(cell: ImagesListCell, text: String, likeImageName: String) {
         cell.dateLable.text = text
         cell.likeButton.setImage(UIImage(named: likeImageName), for: .normal)
     }
