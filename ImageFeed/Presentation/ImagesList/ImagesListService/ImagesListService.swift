@@ -39,7 +39,6 @@ class ImagesListService {
     private init() {}
     
     private (set) var photos: [Photo] = []
-    private var lastLoadedPage: Int?
     private let urlSession = URLSession.shared
     private let tokenStorage = OAuth2TokenStorage()
     
@@ -56,6 +55,7 @@ class ImagesListService {
         let completionOnMainTheard:(Error?) -> Void = { error in
             DispatchQueue.main.async {
                 completion(error)
+                self.isFetching = false
             }
         }
         guard let request = makeFetchPhotosRequest(nextPage: currentPage) else {
@@ -65,11 +65,12 @@ class ImagesListService {
         
         let task = urlSession.objectTask(for: request) { [weak self] (result: Result<[PhotoResult], Error>) in
             DispatchQueue.main.async {
-                
+                print("переход к switch'у")
                 switch result {
                 case .success(let photoResult):
                     self?.processServerResponse(photoResult: photoResult)
                     completionOnMainTheard(nil)
+                    print("Yes")
                 case .failure:
                     self?.currentPage -= 1
                     completionOnMainTheard(PhotosResponseError.defaultError)
@@ -88,6 +89,7 @@ class ImagesListService {
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        print("request is done")
         return request
     }
     

@@ -9,9 +9,17 @@ final class ImagesListCell: UITableViewCell {
     @IBOutlet private var likeButton: UIButton!
     @IBOutlet private var dateLable: UILabel!
     
-    func configure(cell: ImagesListCell, text: String, likeImageName: String) {
-        cell.dateLable.text = text
-        cell.likeButton.setImage(UIImage(named: likeImageName), for: .normal)
+    func configure(cell: ImagesListCell, image: UIImage, text: String, likeImageName: String) {
+        cellImage.image = image
+        dateLable.text = text
+        likeButton.setImage(UIImage(named: likeImageName), for: .normal)
     }
+    
+    override func prepareForReuse() {
+            super.prepareForReuse()
+            cellImage.kf.cancelDownloadTask()
+            cellImage.image = nil
+            dateLable.text = nil
+        }
 }
 
