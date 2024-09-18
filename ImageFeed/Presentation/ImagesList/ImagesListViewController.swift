@@ -3,6 +3,7 @@ import Kingfisher
 // MARK: - ImagesListViewController
 
 final class ImagesListViewController: UIViewController {
+    
     // MARK: - IBOutlet
     
     @IBOutlet private var tableView: UITableView!
@@ -101,7 +102,9 @@ final class ImagesListViewController: UIViewController {
 
 extension ImagesListViewController {
     func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
-        let imageURLString = photos[indexPath.row].thumbImageURL
+        guard let photo = photos[safeIndex: indexPath.row] else { return }
+        
+        let imageURLString = photo.thumbImageURL
         
         let imageName = indexPath.row % 2 == 0 ? "Active" : "No Active"
         
@@ -116,17 +119,16 @@ extension ImagesListViewController {
                 
                 switch result {
                 case .success(let value):
-                    cell.configure(cell: cell, image: value.image, text: dateFormatter.string(from: Date()), likeImageName: imageName)
+                    cell.configure(image: value.image, text: dateFormatter.string(from: Date()), isLiked: photo.isLiked)
                     
                 case .failure(let error):
                     print("Error loading image:",
                           error.localizedDescription)
                     guard let placeholder = UIImage(named: "Stub") else {return}
                     cell.configure(
-                        cell: cell,
                         image: placeholder,
                         text: dateFormatter.string(from: Date()),
-                        likeImageName: imageName
+                        isLiked: photo.isLiked
                     )
                 }
                 
@@ -142,15 +144,15 @@ extension ImagesListViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: ImagesListCell.reuseIdentifier, for: indexPath)
         
-        guard let imageListCell = cell as? ImagesListCell else {
+        if let cell = tableView.dequeueReusableCell(withIdentifier: ImagesListCell.reuseIdentifier, for: indexPath) as? ImagesListCell {
+            cell.delegate = self
+            
+            configCell(for: cell, with: indexPath)
+            return cell
+        } else {
             return UITableViewCell()
         }
-        
-        configCell(for: imageListCell, with: indexPath)
-        
-        return imageListCell
     }
 }
 
@@ -178,5 +180,34 @@ extension ImagesListViewController: UITableViewDelegate {
         let scale = imageViewWidth / imageWidth
         let cellHeight = photo.size.height * scale + imageInsets.top + imageInsets.bottom
         return cellHeight
+    }
+}
+
+extension ImagesListViewController: ImagesListCellDelegate {
+    func imageListCellDidTapLike(_ cell: ImagesListCell) {
+        guard let indexPath = tableView.indexPath(for: cell) else { return }
+        
+        let photo = photos[indexPath.row]
+        UIBlockingProgressHUD.show()
+        
+        imagesListService.changeLike(photoId: photo.id, isLike: !photo.isLiked) { [weak self] result in
+            guard let self else { return }
+            switch result {
+            case .success:
+                DispatchQueue.main.async {
+                    self.photos = self.imagesListService.photos
+                    cell.setIsLiked(self.photos[indexPath.row].isLiked)
+                    print("изменение лайка в imageListViewController")
+                }
+                UIBlockingProgressHUD.dismiss()
+            case .failure(let error):
+                UIBlockingProgressHUD.dismiss()
+                print("DEBUG",
+                      "[\(String(describing: self)).\(#function)]:",
+                      error.localizedDescription,
+                      separator: "\n")
+                // добавить алерт
+            }
+        }
     }
 }

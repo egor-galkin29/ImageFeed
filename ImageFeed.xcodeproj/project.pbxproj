@@ -25,6 +25,7 @@
 		2F3CA4FF2C8F78A70047DDF9 /* ImagesListService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F3CA4FE2C8F78A70047DDF9 /* ImagesListService.swift */; };
 		2F3CA5022C8F79D80047DDF9 /* Photo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F3CA5012C8F79D80047DDF9 /* Photo.swift */; };
 		2F3CA5042C90A2430047DDF9 /* CustomDateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F3CA5032C90A2430047DDF9 /* CustomDateFormatter.swift */; };
+		2F4383442C99214400C2ABCF /* Array+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F4383432C99214400C2ABCF /* Array+Extensions.swift */; };
 		2F60F8EB2BE6F5E000DDD37B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F60F8EA2BE6F5E000DDD37B /* AppDelegate.swift */; };
 		2F60F8ED2BE6F5E000DDD37B /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F60F8EC2BE6F5E000DDD37B /* SceneDelegate.swift */; };
 		2F60F8EF2BE6F5E000DDD37B /* ImagesListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F60F8EE2BE6F5E000DDD37B /* ImagesListViewController.swift */; };
@@ -72,6 +73,7 @@
 		2F3CA4FE2C8F78A70047DDF9 /* ImagesListService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesListService.swift; sourceTree = "<group>"; };
 		2F3CA5012C8F79D80047DDF9 /* Photo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Photo.swift; sourceTree = "<group>"; };
 		2F3CA5032C90A2430047DDF9 /* CustomDateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomDateFormatter.swift; sourceTree = "<group>"; };
+		2F4383432C99214400C2ABCF /* Array+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Extensions.swift"; sourceTree = "<group>"; };
 		2F60F8E72BE6F5E000DDD37B /* ImageFeed.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ImageFeed.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2F60F8EA2BE6F5E000DDD37B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2F60F8EC2BE6F5E000DDD37B /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -194,6 +196,19 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
+		2F4383422C9920F400C2ABCF /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				2F3CA5032C90A2430047DDF9 /* CustomDateFormatter.swift */,
+				2F1B7D8A2C81D30300BD7B88 /* URLSession+data.swift */,
+				2F60F8EC2BE6F5E000DDD37B /* SceneDelegate.swift */,
+				2F60F8EA2BE6F5E000DDD37B /* AppDelegate.swift */,
+				2F1405AD2C14EFDF00882D2E /* Constants.swift */,
+				2F4383432C99214400C2ABCF /* Array+Extensions.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
 		2F60F8DE2BE6F5E000DDD37B = {
 			isa = PBXGroup;
 			children = (
@@ -217,14 +232,10 @@
 		2F60F8E92BE6F5E000DDD37B /* ImageFeed */ = {
 			isa = PBXGroup;
 			children = (
-				2F60F8EA2BE6F5E000DDD37B /* AppDelegate.swift */,
-				2F60F8EC2BE6F5E000DDD37B /* SceneDelegate.swift */,
-				2F1405AD2C14EFDF00882D2E /* Constants.swift */,
+				2F4383422C9920F400C2ABCF /* Helpers */,
 				2F60F8F32BE6F5E000DDD37B /* ImageFeed.xcdatamodeld */,
 				2F60F9EC2BEC5B9500DDD37B /* Presentation */,
 				2F60F96A2BEBAD5500DDD37B /* Resources  */,
-				2F1B7D8A2C81D30300BD7B88 /* URLSession+data.swift */,
-				2F3CA5032C90A2430047DDF9 /* CustomDateFormatter.swift */,
 			);
 			path = ImageFeed;
 			sourceTree = "<group>";
@@ -435,6 +446,7 @@
 				2F00DC8B2C5C166B00373FA0 /* WebViewViewController.swift in Sources */,
 				2F0D15D02C75335000E11209 /* ProfileService.swift in Sources */,
 				2F1B7D8B2C81D30300BD7B88 /* URLSession+data.swift in Sources */,
+				2F4383442C99214400C2ABCF /* Array+Extensions.swift in Sources */,
 				2F1B7D972C87F03700BD7B88 /* TabBarController.swift in Sources */,
 				2F3CA5022C8F79D80047DDF9 /* Photo.swift in Sources */,
 				2FBB4A9F2BF5AB4A0022EBA8 /* ProfileViewController.swift in Sources */,

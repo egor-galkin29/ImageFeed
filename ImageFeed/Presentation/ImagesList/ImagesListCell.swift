@@ -1,5 +1,9 @@
 import UIKit
 
+protocol ImagesListCellDelegate: AnyObject {
+    func imageListCellDidTapLike(_ cell: ImagesListCell)
+}
+
 // MARK: - ImagesListCell
 
 final class ImagesListCell: UITableViewCell {
@@ -9,17 +13,30 @@ final class ImagesListCell: UITableViewCell {
     @IBOutlet private var likeButton: UIButton!
     @IBOutlet private var dateLable: UILabel!
     
-    func configure(cell: ImagesListCell, image: UIImage, text: String, likeImageName: String) {
+    weak var delegate: ImagesListCellDelegate?
+
+    func configure(image: UIImage, text: String, isLiked: Bool) {
+        let LikeButtonImage = isLiked ? UIImage(named: "Active") : UIImage(named: "No Active")
+
         cellImage.image = image
         dateLable.text = text
-        likeButton.setImage(UIImage(named: likeImageName), for: .normal)
+        likeButton.setImage(LikeButtonImage, for: .normal)
     }
     
-    override func prepareForReuse() {
-            super.prepareForReuse()
-            cellImage.kf.cancelDownloadTask()
-            cellImage.image = nil
-            dateLable.text = nil
+    func setIsLiked(_ isLiked: Bool) {
+        let LikeButtonImage = isLiked ? UIImage(named: "Active") : UIImage(named: "No Active")
+
+        self.likeButton.setImage(LikeButtonImage, for: .normal)
         }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        cellImage.kf.cancelDownloadTask()
+        cellImage.image = nil
+        dateLable.text = nil
+    }
+    @IBAction func likeButtonClicked(_ sender: Any) {
+        delegate?.imageListCellDidTapLike(self)
+    }
 }
 
