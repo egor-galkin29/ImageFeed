@@ -35,10 +35,6 @@ struct PhotoResult: Codable {
     }
 }
 
-struct LikeResponseBody: Decodable {
-    let photo: PhotoResult
-}
-
 class ImagesListService {
     static let shared = ImagesListService()
     private init() {}
@@ -98,7 +94,6 @@ class ImagesListService {
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-        print("request is done")
         return request
     }
     
@@ -163,9 +158,12 @@ class ImagesListService {
         }
         
         var request = URLRequest(url: url)
-        request.httpMethod = isLiked ? "DELETE" : "POST"
+        request.httpMethod = isLiked ? "POST" : "DELETE"
         request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-        print(request)
         return request
     }
+    
+    func cleanImagesList() {
+            photos.removeAll()
+        }
 }

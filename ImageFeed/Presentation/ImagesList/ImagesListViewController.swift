@@ -33,16 +33,15 @@ final class ImagesListViewController: UIViewController {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == showSingleImageSegueIdentifier {
-            //            guard
-            //                let viewController = segue.destination as? SingleImageViewController,
-            //                let indexPath = sender as? IndexPath
-            //            else {
-            //                assertionFailure("Invalid segue destination")
-            //                return
-            //            }
-            //
-            //            let image = UIImage(named: photosName[indexPath.row])
-            //            viewController.image = image
+            guard
+                let viewController = segue.destination as? SingleImageViewController,
+                let indexPath = sender as? IndexPath
+            else {
+                assertionFailure("Invalid segue destination")
+                return
+            }
+            guard let largeImageURL = URL(string: photos[indexPath.row].largeImageURL) else { return }
+            viewController.largeImageURL = largeImageURL
         } else {
             super.prepare(for: segue, sender: sender)
         }
@@ -106,10 +105,6 @@ extension ImagesListViewController {
         
         let imageURLString = photo.thumbImageURL
         
-        let imageName = indexPath.row % 2 == 0 ? "Active" : "No Active"
-        
-        
-        
         cell.cellImage.kf.indicatorType = .activity
         cell.cellImage.kf.setImage(
             with: URL(string: imageURLString),
@@ -122,8 +117,6 @@ extension ImagesListViewController {
                     cell.configure(image: value.image, text: dateFormatter.string(from: Date()), isLiked: photo.isLiked)
                     
                 case .failure(let error):
-                    print("Error loading image:",
-                          error.localizedDescription)
                     guard let placeholder = UIImage(named: "Stub") else {return}
                     cell.configure(
                         image: placeholder,

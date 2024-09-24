@@ -1,4 +1,5 @@
 import UIKit
+import Kingfisher
 
 final class SingleImageViewController: UIViewController {
     var image: UIImage? {
@@ -11,11 +12,15 @@ final class SingleImageViewController: UIViewController {
         }
     }
     
+    var largeImageURL: URL?
+    
     @IBOutlet private var scrollView: UIScrollView!
     @IBOutlet private var imageView: UIImageView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        loadImage()
+        
         scrollView.minimumZoomScale = 0.1
         scrollView.maximumZoomScale = 1.25
         
@@ -59,5 +64,44 @@ final class SingleImageViewController: UIViewController {
 extension SingleImageViewController: UIScrollViewDelegate {
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
         imageView
+    }
+}
+
+private extension SingleImageViewController {
+    func loadImage() {
+        guard let largeImageURL = largeImageURL else { return }
+        let kf = KingfisherManager.shared
+        imageView.image = nil
+        UIBlockingProgressHUD.show()
+        kf.retrieveImage(with: largeImageURL) {result in
+            UIBlockingProgressHUD.dismiss()
+            
+            switch result {
+            case .success(let value):
+                self.image = value.image
+                print("Изображение успешно загружено: \(value.image)")
+            case .failure(let error):
+                print("Ошибка загрузки: \(error.localizedDescription)")
+                self.showError(vc: self)
+            }
+        }
+    }
+    
+    // MARK: - Error Alert
+    func showError(vc: SingleImageViewController) {
+        let alert = UIAlertController(
+            title: "Что-то пошло не так!",
+            message: "Попробовать ещё раз?",
+            preferredStyle: .alert)
+        
+        let cancelButton = UIAlertAction(title: "Не надо", style: .cancel, handler: nil)
+        let retryAction = UIAlertAction(title: "Повторить", style: .cancel) { _ in
+            self.loadImage()
+        }
+        
+        alert.addAction(cancelButton)
+        alert.addAction(retryAction)
+        
+        self.present(vc, animated: true, completion: nil)
     }
 }

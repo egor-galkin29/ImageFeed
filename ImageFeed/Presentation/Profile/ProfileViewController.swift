@@ -3,6 +3,7 @@ import Kingfisher
 
 final class ProfileViewController: UIViewController {
     let profileService = ProfileService.shared
+    private let profileLogoutService = ProfileLogoutService.shared
     private let tokenStorage = OAuth2TokenStorage()
     
     private let imageView: UIImageView = {
@@ -11,12 +12,18 @@ final class ProfileViewController: UIViewController {
         return image
     }()
     
-    private let escapeButton: UIButton = {
+    private let logoutButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(named: "log out"), for: .normal)
         button.tintColor = .ypRed
+        button.addTarget(self, action: #selector(didTapLogoutButton), for: .touchUpInside)
         return button
     }()
+    
+    @objc func didTapLogoutButton() {
+        dismiss(animated: true)
+        showLogoutAlert(vc: self)
+    }
     
     private let nameLabel: UILabel = {
         let label = UILabel()
@@ -89,7 +96,7 @@ final class ProfileViewController: UIViewController {
     private func setupView() {
         view.backgroundColor = .ypBlack
         
-        [imageView, escapeButton, nameLabel, nickNameLabel, statusLable].forEach {
+        [imageView, logoutButton, nameLabel, nickNameLabel, statusLable].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview($0)
         }
@@ -102,11 +109,7 @@ final class ProfileViewController: UIViewController {
         setupUserLoginLabelConstraints()
         setupUserDescriptionLabelConstraints()
     }
-    
-    private func setupActions() {
-        escapeButton.addTarget(self, action: #selector(self.didTapLogoutButton), for: .touchUpInside)
-    }
-    
+
     private func setupUserImageConstraints() {
         NSLayoutConstraint.activate([
             imageView.heightAnchor.constraint(equalToConstant: 70),
@@ -118,10 +121,10 @@ final class ProfileViewController: UIViewController {
     
     private func setupLogoutButtonConstraints() {
         NSLayoutConstraint.activate([
-            escapeButton.heightAnchor.constraint(equalToConstant: 44),
-            escapeButton.widthAnchor.constraint(equalToConstant: 44),
-            escapeButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            escapeButton.centerYAnchor.constraint(equalTo: imageView.centerYAnchor)
+            logoutButton.heightAnchor.constraint(equalToConstant: 44),
+            logoutButton.widthAnchor.constraint(equalToConstant: 44),
+            logoutButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            logoutButton.centerYAnchor.constraint(equalTo: imageView.centerYAnchor)
         ])
     }
     
@@ -145,5 +148,17 @@ final class ProfileViewController: UIViewController {
             statusLable.topAnchor.constraint(equalTo: nickNameLabel.bottomAnchor, constant: 8)
         ])
     }
-    @objc private func didTapLogoutButton() {}
+    
+    func showLogoutAlert(vc: ProfileViewController) {
+            let alertModel = AlertModel(
+                title: "Пока, пока!",
+                message: "Уверенные что хотите выйти?",
+                buttons: [.yesButton, .noButton],
+                identifier: "Logout",
+                completion: {
+                    self.profileLogoutService.logout()
+                }
+            )
+            AlertPresenter.showAlert(on: vc, model: alertModel)
+        }
 }
