@@ -6,9 +6,16 @@ final class ProfileViewController: UIViewController {
     private let profileLogoutService = ProfileLogoutService.shared
     private let tokenStorage = OAuth2TokenStorage()
     
+    private let imageViewGradient = CAGradientLayer()
+    private let nameLabelGradient = CAGradientLayer()
+    private let nickNameLabelGradient = CAGradientLayer()
+    private let statusLableGradient = CAGradientLayer()
+    private var gradientLayers: [CAGradientLayer] = []
+    
     private let imageView: UIImageView = {
         let image = UIImageView(image: UIImage(named: "avatarPhoto"))
         image.layer.cornerRadius = 35
+        image.layer.masksToBounds = true
         return image
     }()
     
@@ -63,9 +70,17 @@ final class ProfileViewController: UIViewController {
                 guard let self = self else { return }
                 self.updateAvatar()
             }
+        
+        createGradients()
         updateAvatar()
         updateLableText()
         setup()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        updateAllGradients()
     }
     
     private func updateAvatar() {
@@ -74,6 +89,8 @@ final class ProfileViewController: UIViewController {
             let url = URL(string: profileImageURL)
         else { return }
         imageView.kf.setImage(with: url)
+        
+        removeGradients()
     }
     
     
@@ -109,7 +126,7 @@ final class ProfileViewController: UIViewController {
         setupUserLoginLabelConstraints()
         setupUserDescriptionLabelConstraints()
     }
-
+    
     private func setupUserImageConstraints() {
         NSLayoutConstraint.activate([
             imageView.heightAnchor.constraint(equalToConstant: 70),
@@ -149,16 +166,76 @@ final class ProfileViewController: UIViewController {
         ])
     }
     
-    func showLogoutAlert(vc: ProfileViewController) {
-            let alertModel = AlertModel(
-                title: "Пока, пока!",
-                message: "Уверенные что хотите выйти?",
-                buttons: [.yesButton, .noButton],
-                identifier: "Logout",
-                completion: {
-                    self.profileLogoutService.logout()
-                }
-            )
-            AlertPresenter.showAlert(on: vc, model: alertModel)
+    private func addGradient(to view: UIView) -> CAGradientLayer {
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.colors = [
+            UIColor(red: 0.682, green: 0.686, blue: 0.706, alpha: 1).cgColor,
+            UIColor(red: 0.531, green: 0.533, blue: 0.553, alpha: 1).cgColor,
+            UIColor(red: 0.431, green: 0.433, blue: 0.453, alpha: 1).cgColor
+        ]
+        gradientLayer.locations = [0, 0.1, 0.3]
+        gradientLayer.startPoint = CGPoint(x: 0, y: 0.5)
+        gradientLayer.endPoint = CGPoint(x: 1, y: 0.5)
+        gradientLayer.frame = view.bounds
+        
+        if let lable = view as? UILabel {
+            gradientLayer.cornerRadius = 7
+        } else {
+            gradientLayer.cornerRadius = 35
         }
+        
+        gradientLayer.masksToBounds = true
+        view.layer.insertSublayer(gradientLayer, at: 0)
+        
+        let gradientChangeAnimation = CABasicAnimation(keyPath: "locations")
+        gradientChangeAnimation.duration = 1.0
+        gradientChangeAnimation.repeatCount = .infinity
+        gradientChangeAnimation.fromValue = [0, 0.1, 0.3]
+        gradientChangeAnimation.toValue = [0, 0.8, 1]
+        gradientLayer.add(gradientChangeAnimation, forKey: "locationsChange")
+        
+        return gradientLayer
+    }
+    
+    private func updateGradientLayerFrame(for view: UIView) {
+        if let gradientLayer = view.layer.sublayers?.first as? CAGradientLayer {
+            gradientLayer.frame = view.bounds
+        }
+    }
+    
+    private func createGradients() {
+        let gradient1 = addGradient(to: nameLabel)
+        let gradient2 = addGradient(to: nickNameLabel)
+        let gradient3 = addGradient(to: statusLable)
+        let gradient4 = addGradient(to: imageView)
+        
+        gradientLayers.append(contentsOf: [gradient1, gradient2, gradient3, gradient4])
+    }
+    
+    private func updateAllGradients() {
+        updateGradientLayerFrame(for: nameLabel)
+        updateGradientLayerFrame(for: nickNameLabel)
+        updateGradientLayerFrame(for: statusLable)
+        updateGradientLayerFrame(for: imageView)
+    }
+    
+    func removeGradients() {
+        for gradient in gradientLayers {
+            gradient.removeFromSuperlayer()
+        }
+        gradientLayers.removeAll()
+    }
+    
+    func showLogoutAlert(vc: ProfileViewController) {
+        let alertModel = AlertModel(
+            title: "Пока, пока!",
+            message: "Уверенные что хотите выйти?",
+            buttons: [.yesButton, .noButton],
+            identifier: "Logout",
+            completion: {
+                self.profileLogoutService.logout()
+            }
+        )
+        AlertPresenter.showAlert(on: vc, model: alertModel)
+    }
 }
