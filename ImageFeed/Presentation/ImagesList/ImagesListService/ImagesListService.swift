@@ -48,8 +48,6 @@ class ImagesListService {
     private var isFetching = false
     private var currentPage = 0
     
-    // MARK: - Network request for photos
-    
     func fetchPhotosNextPage(completion: @escaping (Error?) -> Void) {
         guard !isFetching else { return }
         
@@ -103,52 +101,49 @@ class ImagesListService {
         NotificationCenter.default.post(name: Self.didChangeNotification, object: self)
     }
     
-    // MARK: - Network request for likes
-    
     func changeLike(photoId: String, isLike: Bool, _ completion: @escaping (Result<Void, Error>) -> Void) {
         assert(Thread.isMainThread)
-                
-                if changeLikeTask != nil {
-                    print("DEBUG",
-                          "[\(String(describing: self)).\(#function)]:",
-                          "Change like task is already in progress!",
-                          separator: "\n")
-                    changeLikeTask?.cancel()
-                }
-                
-                guard let token = tokenStorage.token else { return }
+        
+        if changeLikeTask != nil {
+            print("DEBUG",
+                  "[\(String(describing: self)).\(#function)]:",
+                  "Change like task is already in progress!",
+                  separator: "\n")
+            changeLikeTask?.cancel()
+        }
+        
+        guard let token = tokenStorage.token else { return }
         
         guard let request = makeFetchLikeRequest(isLiked: isLike, photoID: photoId, token: token) else { return }
         
         let task = urlSession.dataTask(with: request) { [weak self] (data, response, error) in
-                    
-                    guard let self else { return }
-                    
-                    if let error = error {
-                        self.changeLikeTask = nil
-                        completion(.failure(error))
-                        print("DEBUG",
-                              "[\(String(describing: self)).\(#function)]:",
-                              "Error while changing like:",
-                              error.localizedDescription,
-                              separator: "\n")
-                        return
-                    }
-                    
-                    if let index = self.photos.firstIndex(where: { $0.id == photoId }) {
-                        let photo = self.photos[index]
-                        let newPhoto = Photo(photo: photo, isLiked: !photo.isLiked)
-                        DispatchQueue.main.async {
-                            self.photos = self.photos.withReplaced(itemAt: index, newValue: newPhoto)
-                            print("фото заменено")
-                        }
-                        
-                        completion(.success(Void()))
-                        self.changeLikeTask = nil
-                    }
+            
+            guard let self else { return }
+            
+            if let error = error {
+                self.changeLikeTask = nil
+                completion(.failure(error))
+                print("DEBUG",
+                      "[\(String(describing: self)).\(#function)]:",
+                      "Error while changing like:",
+                      error.localizedDescription,
+                      separator: "\n")
+                return
+            }
+            
+            if let index = self.photos.firstIndex(where: { $0.id == photoId }) {
+                let photo = self.photos[index]
+                let newPhoto = Photo(photo: photo, isLiked: !photo.isLiked)
+                DispatchQueue.main.async {
+                    self.photos = self.photos.withReplaced(itemAt: index, newValue: newPhoto)
                 }
-                changeLikeTask = task
-                task.resume()
+                
+                completion(.success(Void()))
+                self.changeLikeTask = nil
+            }
+        }
+        changeLikeTask = task
+        task.resume()
     }
     
     private func makeFetchLikeRequest(isLiked: Bool, photoID: String, token: String) -> URLRequest? {
@@ -164,6 +159,6 @@ class ImagesListService {
     }
     
     func cleanImagesList() {
-            photos.removeAll()
-        }
+        photos.removeAll()
+    }
 }

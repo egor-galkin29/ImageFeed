@@ -23,7 +23,6 @@ final class DateConvertor {
     
     private let dateFormatter = ISO8601DateFormatter()
     
-    // MARK: - Public methods
     func getDateFromString(from string: String) -> Date? {
         return dateFormatter.date(from: string)
     }

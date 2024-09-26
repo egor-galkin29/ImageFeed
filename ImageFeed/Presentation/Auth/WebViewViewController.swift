@@ -36,10 +36,7 @@ final class WebViewViewController: UIViewController {
     }
     
     private func loadAuthView() {
-        guard var urlComponents = URLComponents(string: unsplashAuthorizeURLString) else {
-            print("Ошибка")
-            return
-        }
+        guard var urlComponents = URLComponents(string: unsplashAuthorizeURLString) else { return }
         
         urlComponents.queryItems = [
             URLQueryItem(name: "client_id", value: Constants.accessKey),
@@ -48,10 +45,7 @@ final class WebViewViewController: UIViewController {
             URLQueryItem(name: "scope", value: Constants.accessScope)
         ]
         
-        guard let url = urlComponents.url else {
-            print("Ошибка 2")
-            return
-        }
+        guard let url = urlComponents.url else { return }
         
         let request = URLRequest(url: url)
         webView.load(request)

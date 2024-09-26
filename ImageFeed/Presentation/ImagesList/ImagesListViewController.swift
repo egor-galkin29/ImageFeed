@@ -51,14 +51,7 @@ final class ImagesListViewController: UIViewController {
     }
     
     // MARK: - Private Methods
-    
-//    private lazy var dateFormatter: DateFormatter = {
-//        let formatter = DateFormatter()
-//        formatter.dateStyle = .long
-//        formatter.timeStyle = .none
-//        return formatter
-//    }()
-    
+
     private func loadImages() {
         imagesListService.fetchPhotosNextPage(completion: { [weak self] error in
             if let error {
@@ -107,12 +100,12 @@ extension ImagesListViewController {
         guard let photo = photos[safeIndex: indexPath.row] else { return }
         
         let stringDate: String
-                
-                if let date = photo.createdAt {
-                    stringDate = dateFormatter.getStringFromDate(from: date)
-                } else {
-                    stringDate = ""
-                }
+        
+        if let date = photo.createdAt {
+            stringDate = dateFormatter.getStringFromDate(from: date)
+        } else {
+            stringDate = ""
+        }
         
         let imageURLString = photo.thumbImageURL
         
@@ -202,7 +195,6 @@ extension ImagesListViewController: ImagesListCellDelegate {
                 DispatchQueue.main.async {
                     self.photos = self.imagesListService.photos
                     cell.setIsLiked(self.photos[indexPath.row].isLiked)
-                    print("изменение лайка в imageListViewController")
                 }
                 UIBlockingProgressHUD.dismiss()
             case .failure(let error):
@@ -211,7 +203,6 @@ extension ImagesListViewController: ImagesListCellDelegate {
                       "[\(String(describing: self)).\(#function)]:",
                       error.localizedDescription,
                       separator: "\n")
-                // добавить алерт
             }
         }
     }
