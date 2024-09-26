@@ -71,7 +71,7 @@ private extension SingleImageViewController {
     func loadImage() {
         guard let largeImageURL = largeImageURL else { return }
         let kf = KingfisherManager.shared
-        imageView.image = nil
+        imageView.image = UIImage(named: "Stub")
         UIBlockingProgressHUD.show()
         kf.retrieveImage(with: largeImageURL) {result in
             UIBlockingProgressHUD.dismiss()
