@@ -11,8 +11,11 @@ final class ImagesListViewController: UIViewController {
     // MARK: - Private Properties
     
     private let imagesListCell = ImagesListCell()
-    private let showSingleImageSegueIdentifier = "ShowSingleImage"
+    private let dateFormatter = DateConvertor.shared
     private let imagesListService = ImagesListService.shared
+    
+    private let showSingleImageSegueIdentifier = "ShowSingleImage"
+    
     private var imageListServiceObserver: NSObjectProtocol?
     private var photos: [Photo] = []
     
@@ -49,12 +52,12 @@ final class ImagesListViewController: UIViewController {
     
     // MARK: - Private Methods
     
-    private lazy var dateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .long
-        formatter.timeStyle = .none
-        return formatter
-    }()
+//    private lazy var dateFormatter: DateFormatter = {
+//        let formatter = DateFormatter()
+//        formatter.dateStyle = .long
+//        formatter.timeStyle = .none
+//        return formatter
+//    }()
     
     private func loadImages() {
         imagesListService.fetchPhotosNextPage(completion: { [weak self] error in
@@ -103,24 +106,33 @@ extension ImagesListViewController {
     func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
         guard let photo = photos[safeIndex: indexPath.row] else { return }
         
+        let stringDate: String
+                
+                if let date = photo.createdAt {
+                    stringDate = dateFormatter.getStringFromDate(from: date)
+                } else {
+                    stringDate = ""
+                }
+        
         let imageURLString = photo.thumbImageURL
         
         cell.cellImage.kf.indicatorType = .activity
         cell.cellImage.kf.setImage(
             with: URL(string: imageURLString),
-            placeholder: UIImage(named: "Stub"),
+            placeholder: nil,
             options: [.transition(.fade(1))]) { [weak self] result in
                 guard let self else { return }
                 
                 switch result {
                 case .success(let value):
-                    cell.configure(image: value.image, text: dateFormatter.string(from: Date()), isLiked: photo.isLiked)
+                    cell.configure(image: value.image, text: stringDate, isLiked: photo.isLiked)
                     
                 case .failure(let error):
                     guard let placeholder = UIImage(named: "Stub") else {return}
+                    cell.gradientLayer?.isHidden = false
                     cell.configure(
                         image: placeholder,
-                        text: dateFormatter.string(from: Date()),
+                        text: stringDate,
                         isLiked: photo.isLiked
                     )
                 }
