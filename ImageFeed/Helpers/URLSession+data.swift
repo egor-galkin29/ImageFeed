@@ -1,17 +1,28 @@
 import UIKit
 
+// MARK: - NetworkError
+
 enum NetworkError: Error {
     case httpStatusCode(Int)
     case urlRequestError(Error)
     case urlSessionError
 }
 
+// MARK: - FetchOAuthTokenError
+
 enum FetchOAuthTokenError: Error {
     case invalidResponse
     case decodingError
 }
 
+// MARK: - URLSession
+
 extension URLSession {
+    
+// MARK: - Public Methods
+    
+    // MARK: - dataTask request
+    
     func data(
         for request: URLRequest,
         completion: @escaping (Result<Data, Error>) -> Void
@@ -41,6 +52,8 @@ extension URLSession {
         
         return task
     }
+    
+    // MARK: - objectTask decoder
     
     func objectTask<T: Decodable>(
         for request: URLRequest,

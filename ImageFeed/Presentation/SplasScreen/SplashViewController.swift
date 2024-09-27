@@ -1,12 +1,22 @@
 import Foundation
 import UIKit
 
+// MARK: - SplashViewController
+
 final class SplashViewController: UIViewController {
+    
+// MARK: - Private Properties
+
     private let storage = OAuth2TokenStorage()
     private let profileService = ProfileService.shared
+    
+// MARK: - Public Properties
+
     let oauth2Service = OAuth2Service.shared
     let profileImageService = ProfileImageService.shared
     
+// MARK: - Public Methods
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
@@ -19,6 +29,10 @@ final class SplashViewController: UIViewController {
         showAuthViewController()
     }
     
+// MARK: - Private Methods
+
+    // MARK: - switchToTabBarController
+
     private func switchToTabBarController() {
         guard let window = UIApplication.shared.windows.first else { fatalError("Invalid Configuration") }
         let tabBarController = UIStoryboard(name: "Main", bundle: .main)
@@ -26,6 +40,8 @@ final class SplashViewController: UIViewController {
         window.rootViewController = tabBarController
     }
     
+    // MARK: - setUpSplashScreen
+
     private func setUpSplashScreen() {
         let splashImageView = UIImageView()
         splashImageView.translatesAutoresizingMaskIntoConstraints = false
@@ -38,6 +54,8 @@ final class SplashViewController: UIViewController {
         splashImageView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
     }
     
+    // MARK: - showAuthViewController
+
     private func showAuthViewController() {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         guard let authViewController = storyboard.instantiateViewController(withIdentifier: "AuthViewController") as? AuthViewController else {
@@ -50,6 +68,8 @@ final class SplashViewController: UIViewController {
         present(authViewController, animated: true, completion: nil)
     }
     
+    // MARK: - fetchPofile
+
     private func fetchPofile(_ token: String) {
         UIBlockingProgressHUD.show()
         
@@ -68,6 +88,8 @@ final class SplashViewController: UIViewController {
         }
     }
 }
+
+// MARK: - AuthViewControllerDelegate
 
 extension SplashViewController: AuthViewControllerDelegate {
     func didAuthenticate(_ vc: AuthViewController, didAuthenticateWithCode code: String) {

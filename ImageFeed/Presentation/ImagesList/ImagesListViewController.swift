@@ -1,14 +1,15 @@
 import UIKit
 import Kingfisher
+
 // MARK: - ImagesListViewController
 
 final class ImagesListViewController: UIViewController {
     
-    // MARK: - IBOutlet
+// MARK: - IBOutlet
     
     @IBOutlet private var tableView: UITableView!
     
-    // MARK: - Private Properties
+// MARK: - Private Properties
     
     private let imagesListCell = ImagesListCell()
     private let dateFormatter = DateConvertor.shared
@@ -19,8 +20,10 @@ final class ImagesListViewController: UIViewController {
     private var imageListServiceObserver: NSObjectProtocol?
     private var photos: [Photo] = []
     
-    // MARK: - Public Methods
+// MARK: - Public Methods
     
+    // MARK: - viewDidLoad
+
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.delegate = self
@@ -33,6 +36,8 @@ final class ImagesListViewController: UIViewController {
         
         addImageListServiceObserver()
     }
+    
+    // MARK: - prepare
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == showSingleImageSegueIdentifier {
@@ -50,8 +55,10 @@ final class ImagesListViewController: UIViewController {
         }
     }
     
-    // MARK: - Private Methods
-
+// MARK: - Private Methods
+    
+    // MARK: - loadImages
+    
     private func loadImages() {
         imagesListService.fetchPhotosNextPage(completion: { [weak self] error in
             if let error {
@@ -62,6 +69,8 @@ final class ImagesListViewController: UIViewController {
             }
         })
     }
+    
+    // MARK: - addImageListServiceObserver
     
     private func addImageListServiceObserver() {
         imageListServiceObserver = NotificationCenter.default.addObserver(
@@ -74,6 +83,7 @@ final class ImagesListViewController: UIViewController {
             self.updateTableViewAnimated()
         }
     }
+    // MARK: - updateTableViewAnimated
     
     private func updateTableViewAnimated() {
         DispatchQueue.main.async { [weak self] in
@@ -96,6 +106,9 @@ final class ImagesListViewController: UIViewController {
 // MARK: - ImagesListViewController
 
 extension ImagesListViewController {
+    
+    // MARK: - configCell
+    
     func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
         guard let photo = photos[safeIndex: indexPath.row] else { return }
         
@@ -137,10 +150,15 @@ extension ImagesListViewController {
 // MARK: - UITableViewDataSource
 
 extension ImagesListViewController: UITableViewDataSource {
+    
+    // MARK: - tableView(numberOfRowsInSection)
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return photos.count
     }
-    
+
+    // MARK: - tableView(cellForRowAt)
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         if let cell = tableView.dequeueReusableCell(withIdentifier: ImagesListCell.reuseIdentifier, for: indexPath) as? ImagesListCell {
@@ -157,6 +175,9 @@ extension ImagesListViewController: UITableViewDataSource {
 // MARK: - UITableViewDelegate
 
 extension ImagesListViewController: UITableViewDelegate {
+    
+    // MARK: - tableView(willDisplay)
+
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         let imagesCount = photos.count
         
@@ -165,10 +186,14 @@ extension ImagesListViewController: UITableViewDelegate {
         }
     }
     
+    // MARK: - tableView(didSelectRowAt)
+
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         performSegue(withIdentifier: showSingleImageSegueIdentifier, sender: indexPath)
     }
     
+    // MARK: - tableView(heightForRowAt)
+
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let photo = photos[indexPath.row]
         
@@ -181,7 +206,12 @@ extension ImagesListViewController: UITableViewDelegate {
     }
 }
 
+// MARK: - ImagesListCellDelegate
+
 extension ImagesListViewController: ImagesListCellDelegate {
+    
+    // MARK: - imageListCellDidTapLike
+
     func imageListCellDidTapLike(_ cell: ImagesListCell) {
         guard let indexPath = tableView.indexPath(for: cell) else { return }
         

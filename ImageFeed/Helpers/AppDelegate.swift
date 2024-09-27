@@ -2,10 +2,12 @@ import UIKit
 import CoreData
 import ProgressHUD
 
+// MARK: - AppDelegate
+
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
-    
+// MARK: - Public Methods
     
     func application(
         _ application: UIApplication,

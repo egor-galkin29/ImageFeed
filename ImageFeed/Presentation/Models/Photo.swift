@@ -1,13 +1,10 @@
-//
-//  Photo.swift
-//  ImageFeed
-//
-//  Created by Егор Галкин on 2024-09-09.
-//
-
 import Foundation
 
+// MARK: - Photo
+
 struct Photo {
+    private let dateFormatter = DateConvertor.shared
+    
     let id: String
     let size: CGSize
     let createdAt: Date?
@@ -19,7 +16,7 @@ struct Photo {
     init(from photoResult: PhotoResult) {
         id = photoResult.id
         size = CGSize(width: photoResult.width, height: photoResult.height)
-        createdAt = CustomDateFormatter.shared.iso8601DateFormatter.date(from: photoResult.createdAt)
+        createdAt = dateFormatter.getDateFromString(from: photoResult.createdAt)
         welcomeDescription = photoResult.description
         thumbImageURL = photoResult.urls.thumb
         largeImageURL = photoResult.urls.full

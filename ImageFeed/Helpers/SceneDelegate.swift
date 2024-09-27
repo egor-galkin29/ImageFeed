@@ -1,9 +1,14 @@
 import UIKit
 
+// MARK: - SceneDelegate
+
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
+    
+// MARK: - Public Properties
     
     var window: UIWindow?
     
+// MARK: - Public Methods
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let scene = (scene as? UIWindowScene) else { return }

@@ -1,5 +1,7 @@
 import UIKit
 
+// MARK: - ImagesListCellDelegate
+
 protocol ImagesListCellDelegate: AnyObject {
     func imageListCellDidTapLike(_ cell: ImagesListCell)
 }
@@ -7,15 +9,54 @@ protocol ImagesListCellDelegate: AnyObject {
 // MARK: - ImagesListCell
 
 final class ImagesListCell: UITableViewCell {
-    static let reuseIdentifier = "ImagesListCell"
     
+// MARK: - IBOutlet
+
     @IBOutlet var cellImage: UIImageView!
     @IBOutlet private var likeButton: UIButton!
     @IBOutlet private var dateLable: UILabel!
     
+// MARK: - Public Properties
+
+    static let reuseIdentifier = "ImagesListCell"
+    
     weak var delegate: ImagesListCellDelegate?
     var gradientLayer: CAGradientLayer?
     
+// MARK: - IBOutlet
+
+    @IBAction func likeButtonClicked(_ sender: Any) {
+        delegate?.imageListCellDidTapLike(self)
+    }
+    
+// MARK: - Public Methods
+
+    // MARK: - prepareForReuse
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        cellImage.kf.cancelDownloadTask()
+        cellImage.image = nil
+        dateLable.text = nil
+    }
+    
+    // MARK: - awakeFromNib
+
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        
+        addGradient()
+    }
+    
+    // MARK: - layoutSubviews
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        gradientLayer?.frame = cellImage.bounds
+    }
+    
+    // MARK: - configure
+
     func configure(image: UIImage, text: String, isLiked: Bool) {
         gradientLayer?.isHidden = true
         
@@ -26,29 +67,16 @@ final class ImagesListCell: UITableViewCell {
         likeButton.setImage(LikeButtonImage, for: .normal)
     }
     
+    // MARK: - setIsLiked
+
     func setIsLiked(_ isLiked: Bool) {
         let LikeButtonImage = isLiked ? UIImage(named: "Active") : UIImage(named: "No Active")
         
         self.likeButton.setImage(LikeButtonImage, for: .normal)
     }
     
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        cellImage.kf.cancelDownloadTask()
-        cellImage.image = nil
-        dateLable.text = nil
-    }
-    
-    @IBAction func likeButtonClicked(_ sender: Any) {
-        delegate?.imageListCellDidTapLike(self)
-    }
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        
-        addGradient()
-    }
-    
+    // MARK: - addGradient
+
     func addGradient() {
         gradientLayer = CAGradientLayer()
         gradientLayer?.colors = [
@@ -68,11 +96,6 @@ final class ImagesListCell: UITableViewCell {
         gradientChangeAnimation.fromValue = [0, 0.1, 0.3]
         gradientChangeAnimation.toValue = [0, 0.8, 1]
         gradientLayer?.add(gradientChangeAnimation, forKey: "locationsChange")
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        gradientLayer?.frame = cellImage.bounds
     }
 }
 

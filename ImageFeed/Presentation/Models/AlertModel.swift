@@ -1,11 +1,6 @@
-//
-//  AlertModel.swift
-//  ImageFeed
-//
-//  Created by Егор Галкин on 2024-09-19.
-//
-
 import Foundation
+
+// MARK: - AlertButton
 
 enum AlertButton: String {
     case okButton = "OK"
@@ -22,6 +17,8 @@ enum AlertButton: String {
         return self.rawValue
     }
 }
+
+// MARK: - AlertModel
 
 struct AlertModel {
     let title: String

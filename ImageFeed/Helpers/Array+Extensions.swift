@@ -1,11 +1,6 @@
-//
-//  Array+Extensions.swift
-//  ImageFeed
-//
-//  Created by Егор Галкин on 2024-09-16.
-//
-
 import Foundation
+
+// MARK: - Array
 
 extension Array {
     

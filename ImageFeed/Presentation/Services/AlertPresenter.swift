@@ -1,13 +1,10 @@
-//
-//  AlertPresenter.swift
-//  ImageFeed
-//
-//  Created by Егор Галкин on 2024-09-19.
-//
-
 import UIKit
 
+// MARK: - AlertPresenter
+
 struct AlertPresenter {
+    
+// MARK: - Public Methods
     
     static func showAlert(on vc: UIViewController, model: AlertModel) {
         showBasicAlert(on: vc,
@@ -17,6 +14,8 @@ struct AlertPresenter {
                        identifier: model.identifier,
                        completion: model.completion)
     }
+    
+// MARK: - Private Methods
     
     private static func showBasicAlert(on vc: UIViewController,
                                        title: String,

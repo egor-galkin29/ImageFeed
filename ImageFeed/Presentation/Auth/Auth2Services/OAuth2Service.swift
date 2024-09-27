@@ -1,11 +1,13 @@
 import UIKit
 
+// MARK: - OAuth2Service
+
 final class OAuth2Service {
-    
     static let shared = OAuth2Service()
+    private init() {}
     
-    let urlSession = URLSession.shared
-    
+// MARK: - Private Properties
+
     private let tokenStorage = OAuth2TokenStorage()
     
     private var lastCode: String?
@@ -19,8 +21,19 @@ final class OAuth2Service {
         case invalidRequest
     }
     
-    private init() {}
+    private(set) var authToken: String? {
+        get {
+            return tokenStorage.token
+        }
+        set {
+            tokenStorage.token = newValue
+        }
+    }
     
+// MARK: - Public Properties
+
+    let urlSession = URLSession.shared
+
     struct OAuthTokenResponseBody: Decodable {
         let accessToken: String
         let tokenType: String
@@ -37,15 +50,10 @@ final class OAuth2Service {
         }
     }
     
-    private(set) var authToken: String? {
-        get {
-            return tokenStorage.token
-        }
-        set {
-            tokenStorage.token = newValue
-        }
-    }
-    
+// MARK: - Public Methods
+
+    // MARK: - makeOAuthTokenRequest
+
     func makeOAuthTokenRequest(code: String) -> URLRequest? {
         let baseURL = URL(string: "https://unsplash.com")
         guard let url = URL(
@@ -64,6 +72,8 @@ final class OAuth2Service {
         return request
     }
     
+    // MARK: - fetchOAuthToken
+
     func fetchOAuthToken(_ code: String, handler: @escaping (Result<String, Error>) -> Void) {
         assert(Thread.isMainThread)
         guard lastCode != code else {

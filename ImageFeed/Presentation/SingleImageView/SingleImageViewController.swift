@@ -1,7 +1,17 @@
 import UIKit
 import Kingfisher
 
+// MARK: - SingleImageViewController
+
 final class SingleImageViewController: UIViewController {
+    
+// MARK: - IBOutlet
+
+    @IBOutlet private var scrollView: UIScrollView!
+    @IBOutlet private var imageView: UIImageView!
+    
+// MARK: - Public Properties
+
     var image: UIImage? {
         didSet {
             guard isViewLoaded, let image else { return }
@@ -14,8 +24,9 @@ final class SingleImageViewController: UIViewController {
     
     var largeImageURL: URL?
     
-    @IBOutlet private var scrollView: UIScrollView!
-    @IBOutlet private var imageView: UIImageView!
+    // MARK: - Public Methods
+        
+        // MARK: - viewDidLoad
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,10 +41,16 @@ final class SingleImageViewController: UIViewController {
         rescaleAndCenterImageInScrollView(image: image)
     }
     
+// MARK: - IBAction
+
+    // MARK: - didTapBackButton
+
     @IBAction private func didTapBackButton() {
         dismiss(animated: true, completion: nil)
     }
     
+    // MARK: - didTapShareButton
+
     @IBAction private func didTapShareButton(_ sender: UIButton) {
         guard let image else { return }
         let share = UIActivityViewController(
@@ -43,6 +60,8 @@ final class SingleImageViewController: UIViewController {
         present(share, animated: true, completion: nil)
     }
     
+// MARK: - Private Methods
+
     private func rescaleAndCenterImageInScrollView(image: UIImage) {
         let minZoomScale = scrollView.minimumZoomScale
         let maxZoomScale = scrollView.maximumZoomScale
@@ -61,13 +80,20 @@ final class SingleImageViewController: UIViewController {
     }
 }
 
+// MARK: - UIScrollViewDelegate
+
 extension SingleImageViewController: UIScrollViewDelegate {
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
         imageView
     }
 }
 
+// MARK: - SingleImageViewController
+
 private extension SingleImageViewController {
+    
+    // MARK: - loadImage
+
     func loadImage() {
         guard let largeImageURL = largeImageURL else { return }
         let kf = KingfisherManager.shared
@@ -87,7 +113,8 @@ private extension SingleImageViewController {
         }
     }
     
-    // MARK: - Error Alert
+    // MARK: - showError
+    
     func showError(vc: SingleImageViewController) {
         let alert = UIAlertController(
             title: "Что-то пошло не так!",

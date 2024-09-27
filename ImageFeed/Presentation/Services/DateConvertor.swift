@@ -1,14 +1,11 @@
-//
-//  DateConvertor.swift
-//  ImageFeed
-//
-//  Created by Егор Галкин on 2024-09-25.
-//
-
 import Foundation
+
+// MARK: - DateConvertor
 
 final class DateConvertor {
     static let shared = DateConvertor()
+    
+// MARK: - Private Properties
     
     private init() { }
     
@@ -22,6 +19,8 @@ final class DateConvertor {
     }()
     
     private let dateFormatter = ISO8601DateFormatter()
+    
+// MARK: - Public Methods
     
     func getDateFromString(from string: String) -> Date? {
         return dateFormatter.date(from: string)
