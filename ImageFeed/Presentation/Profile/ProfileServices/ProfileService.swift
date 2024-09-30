@@ -1,5 +1,7 @@
 import Foundation
 
+// MARK: - ProfileServiceError
+
 enum ProfileServiceError: Error {
     case invalidRequest
     case invalidURL
@@ -8,54 +10,30 @@ enum ProfileServiceError: Error {
     case missingProfileImageURL
 }
 
+// MARK: - JSONError
+
 private enum JSONError: Error {
     case decodingError
 }
 
-struct ProfileResult: Codable {
-    var username: String
-    var firstName: String
-    var lastName: String?
-    var bio: String?
-    
-    enum CodingKeys: String, CodingKey {
-        case username = "username"
-        case firstName = "first_name"
-        case lastName = "last_name"
-        case bio = "bio"
-    }
-}
-
-struct Profile {
-    let username: String
-    let name: String
-    let loginName: String
-    let bio: String?
-    
-    init(username: String, firstname: String, lastname: String?, bio: String?) {
-        self.username = username
-        
-        if let lastname {
-            name = firstname + " " + lastname
-        } else {
-            name = firstname
-        }
-        
-        self.loginName = "@" + username
-        self.bio = bio
-    }
-}
+// MARK: - ProfileService
 
 final class ProfileService {
     static let shared = ProfileService()
     private init() {}
     
+// MARK: - Private Properties
+
     private(set) var profile: Profile?
     
     private let urlSession = URLSession.shared
     private var task: URLSessionTask?
     private var lastToken: String?
-    
+   
+// MARK: - Private Methods
+
+    // MARK: - makeURLRequest
+
     private func makeURLRequest(token: String) -> URLRequest? {
         guard let url = URL(string: "https://api.unsplash.com/me") else {
             return nil
@@ -67,6 +45,8 @@ final class ProfileService {
         return request
     }
     
+    // MARK: - fetchProfile
+
     func fetchProfile(_ token: String, completion: @escaping (Result<Profile, Error>) -> Void) {
         
         assert(Thread.isMainThread)
@@ -111,5 +91,11 @@ final class ProfileService {
         }
         self.task = task
         task.resume()
+    }
+    
+    // MARK: - cleanProfile
+
+    func cleanProfile() {
+        profile = nil
     }
 }

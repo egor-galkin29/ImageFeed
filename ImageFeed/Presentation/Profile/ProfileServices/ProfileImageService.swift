@@ -1,48 +1,27 @@
 import Foundation
 
-struct ProfileImage: Decodable {
-    let small: String
-    let medium: String
-    let large: String
-}
-
-struct UserResult: Decodable {
-    let profileImage: ProfileImage
-    
-    enum CodingKeys: String, CodingKey {
-        case profileImage = "profile_image"
-    }
-}
+// MARK: - ProfileImageService
 
 final class ProfileImageService {
     static let shared = ProfileImageService()
     private init() {}
     
+// MARK: - Public Properties
+    
     static let didChangeNotification = Notification.Name(rawValue: "ProfileImageProviderDidChange")
+    let storage = OAuth2TokenStorage()
+    
+// MARK: - Private Properties
     
     private (set) var avatarURL: String?
     private let urlSession = URLSession.shared
     private var task: URLSessionTask?
     private var lastUsername: String?
     
-    let storage = OAuth2TokenStorage()
-    
-    private func makeProfileImageRequest(username: String) -> URLRequest? {
-        guard let baseURL = URL(string: "https://api.unsplash.com") else {
-            assertionFailure("Failed to create URL")
-            return nil
-        }
-        
-        guard let url = URL(string: "/users/\(username)", relativeTo: baseURL) else {
-            return nil
-        }
-        
-        var request = URLRequest(url: url)
-        request.addValue("Bearer \(storage.token ?? "")", forHTTPHeaderField: "Authorization")
-        request.httpMethod = "GET"
-        return request
-    }
-    
+// MARK: - Public Methods
+
+    // MARK: - fetchProfileImageURL
+
     func fetchProfileImageURL(username: String, _ completion: @escaping (Result<String, Error>) -> Void) {
         assert(Thread.isMainThread)
         guard lastUsername != username else {
@@ -70,7 +49,7 @@ final class ProfileImageService {
                         .post(
                             name: ProfileImageService.didChangeNotification,
                             object: self,
-                            userInfo: ["URL": profileImageURL])                    
+                            userInfo: ["URL": profileImageURL])
                     
                 case .failure(let error):
                     if let networkError = error as? NetworkError {
@@ -93,5 +72,29 @@ final class ProfileImageService {
         }
         self.task = task
         task.resume()
+    }
+    
+    // MARK: - cleanAvatar
+
+    func cleanAvatar() {
+        avatarURL = nil
+    }
+
+// MARK: - Private Methods
+
+    private func makeProfileImageRequest(username: String) -> URLRequest? {
+        guard let baseURL = URL(string: "https://api.unsplash.com") else {
+            assertionFailure("Failed to create URL")
+            return nil
+        }
+        
+        guard let url = URL(string: "/users/\(username)", relativeTo: baseURL) else {
+            return nil
+        }
+        
+        var request = URLRequest(url: url)
+        request.addValue("Bearer \(storage.token ?? "")", forHTTPHeaderField: "Authorization")
+        request.httpMethod = "GET"
+        return request
     }
 }

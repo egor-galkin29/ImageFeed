@@ -1,26 +1,43 @@
 import UIKit
 import Kingfisher
 
+// MARK: - ProfileViewController
+
 final class ProfileViewController: UIViewController {
-    let profileService = ProfileService.shared
+    
+// MARK: - Private Properties
+
+    private let profileService = ProfileService.shared
+    private let profileLogoutService = ProfileLogoutService.shared
     private let tokenStorage = OAuth2TokenStorage()
     
+    private let imageViewGradient = CAGradientLayer()
+    private let nameLabelGradient = CAGradientLayer()
+    private let nickNameLabelGradient = CAGradientLayer()
+    private let statusLableGradient = CAGradientLayer()
+    private var gradientLayers: [CAGradientLayer] = []
+    
+    private var profileImageServiceObserver: NSObjectProtocol?
+    
+//MARK: - UI Components
+
     private let imageView: UIImageView = {
         let image = UIImageView(image: UIImage(named: "avatarPhoto"))
         image.layer.cornerRadius = 35
+        image.layer.masksToBounds = true
         return image
     }()
     
-    private let escapeButton: UIButton = {
+    private let logoutButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(named: "log out"), for: .normal)
         button.tintColor = .ypRed
+        button.addTarget(self, action: #selector(didTapLogoutButton), for: .touchUpInside)
         return button
     }()
     
     private let nameLabel: UILabel = {
         let label = UILabel()
-        label.text = "Егор Галкин"
         label.textColor = .white
         label.font = UIFont.systemFont(ofSize: 23, weight: .bold)
         return label
@@ -28,7 +45,6 @@ final class ProfileViewController: UIViewController {
     
     private let nickNameLabel: UILabel = {
         let label = UILabel()
-        label.text = "@shashluck_ketchup"
         label.textColor = .lightGray
         label.font = UIFont.systemFont(ofSize: 13, weight: .regular)
         return label
@@ -36,13 +52,14 @@ final class ProfileViewController: UIViewController {
     
     private let statusLable: UILabel = {
         let label = UILabel()
-        label.text = "Hello, world!"
         label.textColor = .white
         label.font = UIFont.systemFont(ofSize: 13, weight: .regular)
         return label
     }()
-    
-    private var profileImageServiceObserver: NSObjectProtocol?
+   
+// MARK: - Public Methods
+        
+    // MARK: - viewDidLoad
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -56,21 +73,23 @@ final class ProfileViewController: UIViewController {
                 guard let self = self else { return }
                 self.updateAvatar()
             }
+        
+        createGradients()
         updateAvatar()
         updateLableText()
         setup()
     }
     
-    private func updateAvatar() {
-        guard
-            let profileImageURL = ProfileImageService.shared.avatarURL,
-            let url = URL(string: profileImageURL)
-        else { return }
-        imageView.kf.setImage(with: url)
+    // MARK: - viewDidLayoutSubviews
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        updateAllGradients()
     }
     
-    
-    
+    // MARK: - updateLableText
+
     func updateLableText() {
         if let profile = profileService.profile {
             nameLabel.text = profile.name
@@ -81,20 +100,71 @@ final class ProfileViewController: UIViewController {
         }
     }
     
+    // MARK: - removeGradients
+
+    func removeGradients() {
+        for gradient in gradientLayers {
+            gradient.removeFromSuperlayer()
+        }
+        gradientLayers.removeAll()
+    }
+    
+    // MARK: - showLogoutAlert
+
+    func showLogoutAlert(vc: ProfileViewController) {
+        let alertModel = AlertModel(
+            title: "Пока, пока!",
+            message: "Уверенные что хотите выйти?",
+            buttons: [.yesButton, .noButton],
+            identifier: "Logout",
+            completion: {
+                self.profileLogoutService.logout()
+            }
+        )
+        AlertPresenter.showAlert(on: vc, model: alertModel)
+    }
+    
+    // MARK: - didTapLogoutButton
+
+    @objc func didTapLogoutButton() {
+        dismiss(animated: true)
+        showLogoutAlert(vc: self)
+    }
+   
+// MARK: - Private Methods
+
+    // MARK: - updateAvatar
+
+    private func updateAvatar() {
+        guard
+            let profileImageURL = ProfileImageService.shared.avatarURL,
+            let url = URL(string: profileImageURL)
+        else { return }
+        imageView.kf.setImage(with: url)
+        
+        removeGradients()
+    }
+    
+    // MARK: - setup
+
     private func setup() {
         setupView()
         setupConstraints()
     }
     
+    // MARK: - setupView
+
     private func setupView() {
         view.backgroundColor = .ypBlack
         
-        [imageView, escapeButton, nameLabel, nickNameLabel, statusLable].forEach {
+        [imageView, logoutButton, nameLabel, nickNameLabel, statusLable].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview($0)
         }
     }
     
+    // MARK: - setupConstraints
+
     private func setupConstraints() {
         setupUserImageConstraints()
         setupLogoutButtonConstraints()
@@ -103,10 +173,8 @@ final class ProfileViewController: UIViewController {
         setupUserDescriptionLabelConstraints()
     }
     
-    private func setupActions() {
-        escapeButton.addTarget(self, action: #selector(self.didTapLogoutButton), for: .touchUpInside)
-    }
-    
+    // MARK: - setupLogoutButtonConstraints
+
     private func setupUserImageConstraints() {
         NSLayoutConstraint.activate([
             imageView.heightAnchor.constraint(equalToConstant: 70),
@@ -116,15 +184,19 @@ final class ProfileViewController: UIViewController {
         ])
     }
     
+    // MARK: - setupLogoutButtonConstraints
+
     private func setupLogoutButtonConstraints() {
         NSLayoutConstraint.activate([
-            escapeButton.heightAnchor.constraint(equalToConstant: 44),
-            escapeButton.widthAnchor.constraint(equalToConstant: 44),
-            escapeButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            escapeButton.centerYAnchor.constraint(equalTo: imageView.centerYAnchor)
+            logoutButton.heightAnchor.constraint(equalToConstant: 44),
+            logoutButton.widthAnchor.constraint(equalToConstant: 44),
+            logoutButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            logoutButton.centerYAnchor.constraint(equalTo: imageView.centerYAnchor)
         ])
     }
     
+    // MARK: - setupUserNameLabelConstraints
+
     private func setupUserNameLabelConstraints() {
         NSLayoutConstraint.activate([
             nameLabel.leadingAnchor.constraint(equalTo: imageView.leadingAnchor),
@@ -132,6 +204,8 @@ final class ProfileViewController: UIViewController {
         ])
     }
     
+    // MARK: - setupUserLoginLabelConstraints
+
     private func setupUserLoginLabelConstraints() {
         NSLayoutConstraint.activate([
             nickNameLabel.leadingAnchor.constraint(equalTo: nameLabel.leadingAnchor),
@@ -139,11 +213,73 @@ final class ProfileViewController: UIViewController {
         ])
     }
     
+    // MARK: - setupUserDescriptionLabelConstraints
+
     private func setupUserDescriptionLabelConstraints() {
         NSLayoutConstraint.activate([
             statusLable.leadingAnchor.constraint(equalTo: nickNameLabel.leadingAnchor),
             statusLable.topAnchor.constraint(equalTo: nickNameLabel.bottomAnchor, constant: 8)
         ])
     }
-    @objc private func didTapLogoutButton() {}
+    
+    // MARK: - addGradient
+
+    private func addGradient(to view: UIView) -> CAGradientLayer {
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.colors = [
+            UIColor(red: 0.682, green: 0.686, blue: 0.706, alpha: 1).cgColor,
+            UIColor(red: 0.531, green: 0.533, blue: 0.553, alpha: 1).cgColor,
+            UIColor(red: 0.431, green: 0.433, blue: 0.453, alpha: 1).cgColor
+        ]
+        gradientLayer.locations = [0, 0.1, 0.3]
+        gradientLayer.startPoint = CGPoint(x: 0, y: 0.5)
+        gradientLayer.endPoint = CGPoint(x: 1, y: 0.5)
+        gradientLayer.frame = view.bounds
+        
+        if let lable = view as? UILabel {
+            gradientLayer.cornerRadius = 7
+        } else {
+            gradientLayer.cornerRadius = 35
+        }
+        
+        gradientLayer.masksToBounds = true
+        view.layer.insertSublayer(gradientLayer, at: 0)
+        
+        let gradientChangeAnimation = CABasicAnimation(keyPath: "locations")
+        gradientChangeAnimation.duration = 1.0
+        gradientChangeAnimation.repeatCount = .infinity
+        gradientChangeAnimation.fromValue = [0, 0.1, 0.3]
+        gradientChangeAnimation.toValue = [0, 0.8, 1]
+        gradientLayer.add(gradientChangeAnimation, forKey: "locationsChange")
+        
+        return gradientLayer
+    }
+    
+    // MARK: - updateGradientLayerFrame
+
+    private func updateGradientLayerFrame(for view: UIView) {
+        if let gradientLayer = view.layer.sublayers?.first as? CAGradientLayer {
+            gradientLayer.frame = view.bounds
+        }
+    }
+    
+    // MARK: - createGradients
+
+    private func createGradients() {
+        let gradient1 = addGradient(to: nameLabel)
+        let gradient2 = addGradient(to: nickNameLabel)
+        let gradient3 = addGradient(to: statusLable)
+        let gradient4 = addGradient(to: imageView)
+        
+        gradientLayers.append(contentsOf: [gradient1, gradient2, gradient3, gradient4])
+    }
+    
+    // MARK: - updateAllGradients
+
+    private func updateAllGradients() {
+        updateGradientLayerFrame(for: nameLabel)
+        updateGradientLayerFrame(for: nickNameLabel)
+        updateGradientLayerFrame(for: statusLable)
+        updateGradientLayerFrame(for: imageView)
+    }
 }

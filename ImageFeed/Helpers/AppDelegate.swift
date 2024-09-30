@@ -1,12 +1,21 @@
 import UIKit
 import CoreData
+import ProgressHUD
+
+// MARK: - AppDelegate
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
+// MARK: - Public Methods
     
-    
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+    func application(
+        _ application: UIApplication,
+        didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
+    ) -> Bool {
+        ProgressHUD.animationType = .activityIndicator
+        ProgressHUD.colorHUD = .black
+        ProgressHUD.colorAnimation = .lightGray
         return true
     }
     
