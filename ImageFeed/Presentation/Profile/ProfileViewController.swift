@@ -1,12 +1,19 @@
 import UIKit
 import Kingfisher
 
+protocol ProfileViewControllerProtocol: AnyObject {
+    var presenter: ProfilePresenter? { get set }
+    func updateAvatar()
+    func updateLableText(_ profile: Profile)
+}
+
 // MARK: - ProfileViewController
 
-final class ProfileViewController: UIViewController {
+final class ProfileViewController: UIViewController & ProfileViewControllerProtocol{
     
-// MARK: - Private Properties
-
+    var presenter: ProfilePresenter?
+    // MARK: - Private Properties
+    
     private let profileService = ProfileService.shared
     private let profileLogoutService = ProfileLogoutService.shared
     private let tokenStorage = OAuth2TokenStorage()
@@ -19,8 +26,8 @@ final class ProfileViewController: UIViewController {
     
     private var profileImageServiceObserver: NSObjectProtocol?
     
-//MARK: - UI Components
-
+    //MARK: - UI Components
+    
     private let imageView: UIImageView = {
         let image = UIImageView(image: UIImage(named: "avatarPhoto"))
         image.layer.cornerRadius = 35
@@ -56,9 +63,9 @@ final class ProfileViewController: UIViewController {
         label.font = UIFont.systemFont(ofSize: 13, weight: .regular)
         return label
     }()
-   
-// MARK: - Public Methods
-        
+    
+    // MARK: - Public Methods
+    
     // MARK: - viewDidLoad
     
     override func viewDidLoad() {
@@ -76,12 +83,16 @@ final class ProfileViewController: UIViewController {
         
         createGradients()
         updateAvatar()
-        updateLableText()
+        guard let profile = presenter?.getProfile() else {
+            print("No profile data found")
+            return
+        }
+        updateLableText(profile)
         setup()
     }
     
     // MARK: - viewDidLayoutSubviews
-
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
@@ -89,19 +100,25 @@ final class ProfileViewController: UIViewController {
     }
     
     // MARK: - updateLableText
-
-    func updateLableText() {
-        if let profile = profileService.profile {
-            nameLabel.text = profile.name
-            nickNameLabel.text = profile.loginName
-            statusLable.text = profile.bio
-        } else {
-            print("profile was not found")
-        }
+    
+    func updateLableText(_ profile: Profile) {
+        nameLabel.text = profile.name
+        nickNameLabel.text = profile.loginName
+        statusLable.text = profile.bio
     }
     
+    //    func updateLableText() {
+    //            if let profile = profileService.profile {
+    //                nameLabel.text = profile.name
+    //                nickNameLabel.text = profile.loginName
+    //                statusLable.text = profile.bio
+    //            } else {
+    //                print("profile was not found")
+    //            }
+    //        }
+    
     // MARK: - removeGradients
-
+    
     func removeGradients() {
         for gradient in gradientLayers {
             gradient.removeFromSuperlayer()
@@ -110,7 +127,7 @@ final class ProfileViewController: UIViewController {
     }
     
     // MARK: - showLogoutAlert
-
+    
     func showLogoutAlert(vc: ProfileViewController) {
         let alertModel = AlertModel(
             title: "Пока, пока!",
@@ -125,17 +142,24 @@ final class ProfileViewController: UIViewController {
     }
     
     // MARK: - didTapLogoutButton
-
+    
     @objc func didTapLogoutButton() {
         dismiss(animated: true)
         showLogoutAlert(vc: self)
     }
-   
-// MARK: - Private Methods
-
+    
+    // MARK: - Private Methods
+    
     // MARK: - updateAvatar
-
-    private func updateAvatar() {
+    
+    //    private func updateAvatar() {
+    //        let url = presenter?.getAvatarURL()
+    //        imageView.kf.setImage(with: url)
+    //
+    //        removeGradients()
+    //    }
+    
+    func updateAvatar() {
         guard
             let profileImageURL = ProfileImageService.shared.avatarURL,
             let url = URL(string: profileImageURL)
@@ -146,14 +170,14 @@ final class ProfileViewController: UIViewController {
     }
     
     // MARK: - setup
-
+    
     private func setup() {
         setupView()
         setupConstraints()
     }
     
     // MARK: - setupView
-
+    
     private func setupView() {
         view.backgroundColor = .ypBlack
         
@@ -164,7 +188,7 @@ final class ProfileViewController: UIViewController {
     }
     
     // MARK: - setupConstraints
-
+    
     private func setupConstraints() {
         setupUserImageConstraints()
         setupLogoutButtonConstraints()
@@ -174,7 +198,7 @@ final class ProfileViewController: UIViewController {
     }
     
     // MARK: - setupLogoutButtonConstraints
-
+    
     private func setupUserImageConstraints() {
         NSLayoutConstraint.activate([
             imageView.heightAnchor.constraint(equalToConstant: 70),
@@ -185,7 +209,7 @@ final class ProfileViewController: UIViewController {
     }
     
     // MARK: - setupLogoutButtonConstraints
-
+    
     private func setupLogoutButtonConstraints() {
         NSLayoutConstraint.activate([
             logoutButton.heightAnchor.constraint(equalToConstant: 44),
@@ -196,7 +220,7 @@ final class ProfileViewController: UIViewController {
     }
     
     // MARK: - setupUserNameLabelConstraints
-
+    
     private func setupUserNameLabelConstraints() {
         NSLayoutConstraint.activate([
             nameLabel.leadingAnchor.constraint(equalTo: imageView.leadingAnchor),
@@ -205,7 +229,7 @@ final class ProfileViewController: UIViewController {
     }
     
     // MARK: - setupUserLoginLabelConstraints
-
+    
     private func setupUserLoginLabelConstraints() {
         NSLayoutConstraint.activate([
             nickNameLabel.leadingAnchor.constraint(equalTo: nameLabel.leadingAnchor),
@@ -214,7 +238,7 @@ final class ProfileViewController: UIViewController {
     }
     
     // MARK: - setupUserDescriptionLabelConstraints
-
+    
     private func setupUserDescriptionLabelConstraints() {
         NSLayoutConstraint.activate([
             statusLable.leadingAnchor.constraint(equalTo: nickNameLabel.leadingAnchor),
@@ -223,7 +247,7 @@ final class ProfileViewController: UIViewController {
     }
     
     // MARK: - addGradient
-
+    
     private func addGradient(to view: UIView) -> CAGradientLayer {
         let gradientLayer = CAGradientLayer()
         gradientLayer.colors = [
@@ -256,7 +280,7 @@ final class ProfileViewController: UIViewController {
     }
     
     // MARK: - updateGradientLayerFrame
-
+    
     private func updateGradientLayerFrame(for view: UIView) {
         if let gradientLayer = view.layer.sublayers?.first as? CAGradientLayer {
             gradientLayer.frame = view.bounds
@@ -264,7 +288,7 @@ final class ProfileViewController: UIViewController {
     }
     
     // MARK: - createGradients
-
+    
     private func createGradients() {
         let gradient1 = addGradient(to: nameLabel)
         let gradient2 = addGradient(to: nickNameLabel)
@@ -275,7 +299,7 @@ final class ProfileViewController: UIViewController {
     }
     
     // MARK: - updateAllGradients
-
+    
     private func updateAllGradients() {
         updateGradientLayerFrame(for: nameLabel)
         updateGradientLayerFrame(for: nickNameLabel)
