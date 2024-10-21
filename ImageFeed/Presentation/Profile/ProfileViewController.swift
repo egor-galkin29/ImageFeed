@@ -2,7 +2,7 @@ import UIKit
 import Kingfisher
 
 protocol ProfileViewControllerProtocol: AnyObject {
-    var presenter: ProfilePresenter? { get set }
+    var presenter: ProfilePresenterProtocol? { get set }
     func updateAvatar()
     func updateLableText(_ profile: Profile)
 }
@@ -11,7 +11,7 @@ protocol ProfileViewControllerProtocol: AnyObject {
 
 final class ProfileViewController: UIViewController & ProfileViewControllerProtocol{
     
-    var presenter: ProfilePresenter?
+    var presenter: ProfilePresenterProtocol?
     // MARK: - Private Properties
     
     private let profileService = ProfileService.shared
@@ -83,10 +83,10 @@ final class ProfileViewController: UIViewController & ProfileViewControllerProto
         
         createGradients()
         updateAvatar()
-        guard let profile = presenter?.getProfile() else {
-            print("No profile data found")
-            return
-        }
+        
+        guard let profile = presenter?.getProfile() else { 
+            print("профайла нет")
+            return }
         updateLableText(profile)
         setup()
     }
@@ -107,16 +107,6 @@ final class ProfileViewController: UIViewController & ProfileViewControllerProto
         statusLable.text = profile.bio
     }
     
-    //    func updateLableText() {
-    //            if let profile = profileService.profile {
-    //                nameLabel.text = profile.name
-    //                nickNameLabel.text = profile.loginName
-    //                statusLable.text = profile.bio
-    //            } else {
-    //                print("profile was not found")
-    //            }
-    //        }
-    
     // MARK: - removeGradients
     
     func removeGradients() {
@@ -125,6 +115,11 @@ final class ProfileViewController: UIViewController & ProfileViewControllerProto
         }
         gradientLayers.removeAll()
     }
+    
+    func configure(_ presenter: ProfilePresenterProtocol) {
+            self.presenter = presenter
+            self.presenter?.view = self
+        }
     
     // MARK: - showLogoutAlert
     
@@ -149,25 +144,13 @@ final class ProfileViewController: UIViewController & ProfileViewControllerProto
     }
     
     // MARK: - Private Methods
-    
-    // MARK: - updateAvatar
-    
-    //    private func updateAvatar() {
-    //        let url = presenter?.getAvatarURL()
-    //        imageView.kf.setImage(with: url)
-    //
-    //        removeGradients()
-    //    }
-    
-    func updateAvatar() {
-        guard
-            let profileImageURL = ProfileImageService.shared.avatarURL,
-            let url = URL(string: profileImageURL)
-        else { return }
-        imageView.kf.setImage(with: url)
         
-        removeGradients()
-    }
+        func updateAvatar() {
+            let url = presenter?.getAvatarURL()
+            imageView.kf.setImage(with: url)
+    
+            removeGradients()
+        }
     
     // MARK: - setup
     
