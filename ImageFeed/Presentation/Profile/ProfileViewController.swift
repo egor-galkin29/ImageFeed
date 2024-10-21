@@ -1,10 +1,12 @@
 import UIKit
 import Kingfisher
 
-protocol ProfileViewControllerProtocol: AnyObject {
+public protocol ProfileViewControllerProtocol: AnyObject {
     var presenter: ProfilePresenterProtocol? { get set }
     func updateAvatar()
-    func updateLableText(_ profile: Profile)
+    func setupView()
+    func setupConstraints()
+    func configure(_ presenter: ProfilePresenterProtocol)
 }
 
 // MARK: - ProfileViewController
@@ -88,7 +90,7 @@ final class ProfileViewController: UIViewController & ProfileViewControllerProto
             print("профайла нет")
             return }
         updateLableText(profile)
-        setup()
+        presenter?.viewDidLoad()
     }
     
     // MARK: - viewDidLayoutSubviews
@@ -152,16 +154,9 @@ final class ProfileViewController: UIViewController & ProfileViewControllerProto
             removeGradients()
         }
     
-    // MARK: - setup
-    
-    private func setup() {
-        setupView()
-        setupConstraints()
-    }
-    
     // MARK: - setupView
     
-    private func setupView() {
+    func setupView() {
         view.backgroundColor = .ypBlack
         
         [imageView, logoutButton, nameLabel, nickNameLabel, statusLable].forEach {
@@ -172,7 +167,7 @@ final class ProfileViewController: UIViewController & ProfileViewControllerProto
     
     // MARK: - setupConstraints
     
-    private func setupConstraints() {
+    func setupConstraints() {
         setupUserImageConstraints()
         setupLogoutButtonConstraints()
         setupUserNameLabelConstraints()

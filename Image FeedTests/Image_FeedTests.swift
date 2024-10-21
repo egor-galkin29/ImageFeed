@@ -2,7 +2,10 @@
 import XCTest
 
 final class WebViewTests: XCTestCase {
-    func testViewControllerCallsViewSisLoad() {
+    
+    // MARK: - WebView tests
+
+    func testViewControllerCallsViewDidLoad() {
        // given
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let viewController = storyboard.instantiateViewController(withIdentifier: "WebViewViewController") as! WebViewViewController
@@ -89,4 +92,20 @@ final class WebViewTests: XCTestCase {
         // then
         XCTAssertEqual(code, "test code")
     }
+    
+    // MARK: - ProfileViewontroller tests
+
+    func testProfilePresenterViewDidLoadCalled() {
+            // Given
+                let viewController = ProfileViewController()
+                let presenter = ProfilePresenterSpy()
+                viewController.presenter = presenter
+                presenter.view = viewController
+            
+            // When
+            _ = viewController.view  // Это вызовет viewDidLoad у ProfileViewController
+            
+            // Then
+            XCTAssertTrue(presenter.isViewDidLoadCalled)
+        }
 }

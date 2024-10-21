@@ -1,15 +1,21 @@
 import Foundation
 
-protocol ProfilePresenterProtocol: AnyObject {
+public protocol ProfilePresenterProtocol: AnyObject {
     var view: ProfileViewControllerProtocol? { get set }
     func getProfile() -> Profile?
     func getAvatarURL() -> URL?
+    func viewDidLoad()
 }
 
 final class ProfilePresenter: ProfilePresenterProtocol {
     var view: ProfileViewControllerProtocol?
     
-    func getProfile() -> Profile? {
+    func viewDidLoad() {
+        view?.setupView()
+        view?.setupConstraints()
+    }
+    
+    public func getProfile() -> Profile? {
         guard let profile = ProfileService.shared.profile else { return nil }
         return profile
     }

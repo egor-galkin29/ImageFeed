@@ -51,6 +51,8 @@
 		2F6BB2512CC19C2D00A900C0 /* WebViewPresenterSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F6BB2502CC19C2D00A900C0 /* WebViewPresenterSpy.swift */; };
 		2F6BB2542CC207F000A900C0 /* WebViewViewControllerSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F6BB2532CC207F000A900C0 /* WebViewViewControllerSpy.swift */; };
 		2F6BB2562CC2AAC200A900C0 /* ProfilePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F6BB2552CC2AAC200A900C0 /* ProfilePresenter.swift */; };
+		2F6BB25A2CC6A05E00A900C0 /* ProfilePresenterSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F6BB2592CC6A05E00A900C0 /* ProfilePresenterSpy.swift */; };
+		2F6BB25C2CC6A08900A900C0 /* ProfileViewControllerSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F6BB25B2CC6A08900A900C0 /* ProfileViewControllerSpy.swift */; };
 		2FBB4A9F2BF5AB4A0022EBA8 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FBB4A9E2BF5AB4A0022EBA8 /* ProfileViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -117,6 +119,8 @@
 		2F6BB2502CC19C2D00A900C0 /* WebViewPresenterSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewPresenterSpy.swift; sourceTree = "<group>"; };
 		2F6BB2532CC207F000A900C0 /* WebViewViewControllerSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewViewControllerSpy.swift; sourceTree = "<group>"; };
 		2F6BB2552CC2AAC200A900C0 /* ProfilePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilePresenter.swift; sourceTree = "<group>"; };
+		2F6BB2592CC6A05E00A900C0 /* ProfilePresenterSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilePresenterSpy.swift; sourceTree = "<group>"; };
+		2F6BB25B2CC6A08900A900C0 /* ProfileViewControllerSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewControllerSpy.swift; sourceTree = "<group>"; };
 		2FBB4A9E2BF5AB4A0022EBA8 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -362,6 +366,8 @@
 			children = (
 				2F6BB2502CC19C2D00A900C0 /* WebViewPresenterSpy.swift */,
 				2F6BB2532CC207F000A900C0 /* WebViewViewControllerSpy.swift */,
+				2F6BB2592CC6A05E00A900C0 /* ProfilePresenterSpy.swift */,
+				2F6BB25B2CC6A08900A900C0 /* ProfileViewControllerSpy.swift */,
 			);
 			path = Spy;
 			sourceTree = "<group>";
@@ -567,9 +573,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2F6BB25A2CC6A05E00A900C0 /* ProfilePresenterSpy.swift in Sources */,
 				2F6BB2472CC197AF00A900C0 /* Image_FeedTests.swift in Sources */,
 				2F6BB2542CC207F000A900C0 /* WebViewViewControllerSpy.swift in Sources */,
 				2F6BB2512CC19C2D00A900C0 /* WebViewPresenterSpy.swift in Sources */,
+				2F6BB25C2CC6A08900A900C0 /* ProfileViewControllerSpy.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
