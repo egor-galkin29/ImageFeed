@@ -102,6 +102,11 @@ final class ImagesListViewController: UIViewController & ImageListViewController
         } completion: { _ in }
     }
     
+    func configure(_ presenter: ImageListPresenterProtocol) {
+        self.presenter = presenter
+        self.presenter?.view = self
+    }
+    
 //    private func updateTableViewAnimated() {
 //            DispatchQueue.main.async { [weak self] in
 //                guard let self else { return }
