@@ -1,14 +1,22 @@
 import UIKit
 import Kingfisher
 
+public protocol ImageListViewControllerProtocol: AnyObject {
+    var presenter: ImageListPresenterProtocol? { get set }
+    func updateTableViewAnimated(_ indexPaths: [IndexPath])
+}
 // MARK: - ImagesListViewController
 
-final class ImagesListViewController: UIViewController {
+final class ImagesListViewController: UIViewController & ImageListViewControllerProtocol {
     
 // MARK: - IBOutlet
     
     @IBOutlet private var tableView: UITableView!
     
+// MARK: - Public Properties
+
+    var presenter: ImageListPresenterProtocol?
+
 // MARK: - Private Properties
     
     private let imagesListCell = ImagesListCell()
@@ -17,7 +25,7 @@ final class ImagesListViewController: UIViewController {
     
     private let showSingleImageSegueIdentifier = "ShowSingleImage"
     
-    private var imageListServiceObserver: NSObjectProtocol?
+    //private var imageListServiceObserver: NSObjectProtocol?
     private var photos: [Photo] = []
     
 // MARK: - Public Methods
@@ -33,8 +41,8 @@ final class ImagesListViewController: UIViewController {
         if photos.count == 0 {
             loadImages()
         }
-        
-        addImageListServiceObserver()
+        //addImageListServiceObserver()
+        presenter?.viewDidload()
     }
     
     // MARK: - prepare
@@ -59,6 +67,7 @@ final class ImagesListViewController: UIViewController {
     
     // MARK: - loadImages
     
+    //вынесати
     private func loadImages() {
         imagesListService.fetchPhotosNextPage(completion: { [weak self] error in
             if let error {
@@ -72,35 +81,43 @@ final class ImagesListViewController: UIViewController {
     
     // MARK: - addImageListServiceObserver
     
-    private func addImageListServiceObserver() {
-        imageListServiceObserver = NotificationCenter.default.addObserver(
-            forName: ImagesListService.didChangeNotification,
-            object: nil,
-            queue: .main
-        ) { [weak self] _ in
-            guard let self else { return }
-            
-            self.updateTableViewAnimated()
-        }
-    }
+//    private func addImageListServiceObserver() {
+//        imageListServiceObserver = NotificationCenter.default.addObserver(
+//            forName: ImagesListService.didChangeNotification,
+//            object: nil,
+//            queue: .main
+//        ) { [weak self] _ in
+//            guard let self else { return }
+//            
+//            self.updateTableViewAnimated()
+//        }
+//    }
+    
     // MARK: - updateTableViewAnimated
     
-    private func updateTableViewAnimated() {
-        DispatchQueue.main.async { [weak self] in
-            guard let self else { return }
-            let oldCount = self.photos.count
-            let newCount = self.imagesListService.photos.count
-            if oldCount != newCount {
-                self.photos = self.imagesListService.photos
-                let indexPaths = (oldCount..<newCount).map { i in
-                    IndexPath(row: i, section: 0)
-                }
-                self.tableView.performBatchUpdates {
-                    self.tableView.insertRows(at: indexPaths, with: .automatic)
-                } completion: { _ in }
-            }
-        }
+    //вынести
+    func updateTableViewAnimated(_ indexPaths: [IndexPath]) {
+        self.tableView.performBatchUpdates {
+            self.tableView.insertRows(at: indexPaths, with: .automatic)
+        } completion: { _ in }
     }
+    
+//    private func updateTableViewAnimated() {
+//            DispatchQueue.main.async { [weak self] in
+//                guard let self else { return }
+//                let oldCount = self.photos.count
+//                let newCount = self.imagesListService.photos.count
+//                if oldCount != newCount {
+//                    self.photos = self.imagesListService.photos
+//                    let indexPaths = (oldCount..<newCount).map { i in
+//                        IndexPath(row: i, section: 0)
+//                    }
+//                    self.tableView.performBatchUpdates {
+//                        self.tableView.insertRows(at: indexPaths, with: .automatic)
+//                    } completion: { _ in }
+//                }
+//            }
+//        }
 }
 
 // MARK: - ImagesListViewController

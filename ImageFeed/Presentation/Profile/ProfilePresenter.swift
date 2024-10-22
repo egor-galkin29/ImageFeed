@@ -2,9 +2,10 @@ import Foundation
 
 public protocol ProfilePresenterProtocol: AnyObject {
     var view: ProfileViewControllerProtocol? { get set }
+    func viewDidLoad()
     func getProfile() -> Profile?
     func getAvatarURL() -> URL?
-    func viewDidLoad()
+   
 }
 
 final class ProfilePresenter: ProfilePresenterProtocol {

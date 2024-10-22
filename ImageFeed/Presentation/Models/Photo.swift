@@ -2,7 +2,7 @@ import Foundation
 
 // MARK: - Photo
 
-struct Photo {
+public struct Photo {
     private let dateFormatter = DateConvertor.shared
     
     let id: String
