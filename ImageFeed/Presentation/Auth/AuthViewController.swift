@@ -11,40 +11,40 @@ protocol AuthViewControllerDelegate: AnyObject {
 
 final class AuthViewController: UIViewController {
     
-// MARK: - Private Properties
-
+    // MARK: - Private Properties
+    
     private let ShowWebViewSegueIdentifier: String = "ShowWebView"
     private let oauth2Service = OAuth2Service.shared
     
-// MARK: - Public Properties
-
+    // MARK: - Public Properties
+    
     weak var delegate: AuthViewControllerDelegate?
-   
-// MARK: - Public Methods
-
-    // MARK: - viewDidLoad
-
+    
+    // MARK: - Public Methods
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         configureBackButton()
     }
     
-    // MARK: - prepare
-
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == ShowWebViewSegueIdentifier {
             guard
                 let webViewViewController = segue.destination as? WebViewViewController
             else { fatalError("Failed to prepare for \(ShowWebViewSegueIdentifier)") }
+            let authHelper = AuthHelper()
+            let webViewPresenter = WebViewPresenter(authHelper: authHelper)
+            webViewViewController.presenter = webViewPresenter
+            webViewPresenter.view = webViewViewController
             webViewViewController.delegate = self
         } else {
             super.prepare(for: segue, sender: sender)
         }
     }
     
-// MARK: - Private Methods
-
+    // MARK: - Private Methods
+    
     private func configureBackButton() {
         navigationController?.navigationBar.backIndicatorImage = UIImage(named: "nav_back_button")
         navigationController?.navigationBar.backIndicatorTransitionMaskImage = UIImage(named: "nav_back_button")
@@ -57,8 +57,6 @@ final class AuthViewController: UIViewController {
 
 extension AuthViewController: WebViewViewControllerDelegate {
     
-    // MARK: - webViewViewController
-
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
         navigationController?.popToRootViewController(animated: true)
         
@@ -83,14 +81,10 @@ extension AuthViewController: WebViewViewControllerDelegate {
         }
     }
     
-    // MARK: - webViewViewControllerDidCancel
-
     func webViewViewControllerDidCancel(_ vc: WebViewViewController) {
         dismiss(animated: true)
     }
     
-    // MARK: - showNetworkError
-
     func showNetworkError() {
         
         let alert = UIAlertController(

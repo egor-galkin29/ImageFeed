@@ -10,29 +10,29 @@ protocol ImagesListCellDelegate: AnyObject {
 
 final class ImagesListCell: UITableViewCell {
     
-// MARK: - IBOutlet
-
+    // MARK: - IBOutlet
+    
     @IBOutlet var cellImage: UIImageView!
     @IBOutlet private var likeButton: UIButton!
     @IBOutlet private var dateLable: UILabel!
     
-// MARK: - Public Properties
-
+    // MARK: - Public Properties
+    
     static let reuseIdentifier = "ImagesListCell"
     
     weak var delegate: ImagesListCellDelegate?
     var gradientLayer: CAGradientLayer?
     
-// MARK: - IBOutlet
-
+    // MARK: - IBOutlet
+    
     @IBAction func likeButtonClicked(_ sender: Any) {
         delegate?.imageListCellDidTapLike(self)
     }
     
-// MARK: - Public Methods
-
+    // MARK: - Public Methods
+    
     // MARK: - prepareForReuse
-
+    
     override func prepareForReuse() {
         super.prepareForReuse()
         cellImage.kf.cancelDownloadTask()
@@ -41,7 +41,7 @@ final class ImagesListCell: UITableViewCell {
     }
     
     // MARK: - awakeFromNib
-
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         
@@ -49,14 +49,14 @@ final class ImagesListCell: UITableViewCell {
     }
     
     // MARK: - layoutSubviews
-
+    
     override func layoutSubviews() {
         super.layoutSubviews()
         gradientLayer?.frame = cellImage.bounds
     }
     
     // MARK: - configure
-
+    
     func configure(image: UIImage, text: String, isLiked: Bool) {
         gradientLayer?.isHidden = true
         
@@ -68,7 +68,7 @@ final class ImagesListCell: UITableViewCell {
     }
     
     // MARK: - setIsLiked
-
+    
     func setIsLiked(_ isLiked: Bool) {
         let LikeButtonImage = isLiked ? UIImage(named: "Active") : UIImage(named: "No Active")
         
@@ -76,7 +76,7 @@ final class ImagesListCell: UITableViewCell {
     }
     
     // MARK: - addGradient
-
+    
     func addGradient() {
         gradientLayer = CAGradientLayer()
         gradientLayer?.colors = [

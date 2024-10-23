@@ -7,19 +7,19 @@ final class ProfileLogoutService {
     static let shared = ProfileLogoutService()
     private init() { }
     
-// MARK: - Public Properties
-
+    // MARK: - Public Properties
+    
     let imageListService = ImagesListService.shared
     func logout() {
         cleanCookies()
         cleanUserData()
         switchToRootViewController()
     }
-  
-// MARK: - Private Methods
-
+    
+    // MARK: - Private Methods
+    
     // MARK: - cleanCookies
-
+    
     private func cleanCookies() {
         HTTPCookieStorage.shared.removeCookies(since: Date.distantPast)
         WKWebsiteDataStore.default().fetchDataRecords(ofTypes: WKWebsiteDataStore.allWebsiteDataTypes()) { records in
@@ -30,7 +30,7 @@ final class ProfileLogoutService {
     }
     
     // MARK: - cleanUserData
-
+    
     private func cleanUserData() {
         OAuth2TokenStorage().token = nil
         ProfileService.shared.cleanProfile()
@@ -39,7 +39,7 @@ final class ProfileLogoutService {
     }
     
     // MARK: - switchToRootViewController
-
+    
     private func switchToRootViewController() {
         guard let window = UIApplication.shared.windows.first else {
             assertionFailure("Invalid window configuration")

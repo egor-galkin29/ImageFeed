@@ -12,12 +12,12 @@ final class ImagesListService {
     static let shared = ImagesListService()
     private init() {}
     
-// MARK: - Public Properties
-
+    // MARK: - Public Properties
+    
     static let didChangeNotification = Notification.Name(rawValue: "ImagesListServiceDidChange")
     
-// MARK: - Private Properties
-
+    // MARK: - Private Properties
+    
     private (set) var photos: [Photo] = []
     private let urlSession = URLSession.shared
     private let tokenStorage = OAuth2TokenStorage()
@@ -26,10 +26,10 @@ final class ImagesListService {
     private var isFetching = false
     private var currentPage = 0
     
-// MARK: - Public Methods
-
+    // MARK: - Public Methods
+    
     // MARK: - fetchPhotosNextPage
-
+    
     func fetchPhotosNextPage(completion: @escaping (Error?) -> Void) {
         guard !isFetching else { return }
         
@@ -64,7 +64,7 @@ final class ImagesListService {
     }
     
     // MARK: - changeLike
-
+    
     func changeLike(photoId: String, isLike: Bool, _ completion: @escaping (Result<Void, Error>) -> Void) {
         assert(Thread.isMainThread)
         
@@ -111,15 +111,15 @@ final class ImagesListService {
     }
     
     // MARK: - cleanImagesList
-
+    
     func cleanImagesList() {
         photos.removeAll()
     }
-  
-// MARK: - Private Methods
-
+    
+    // MARK: - Private Methods
+    
     // MARK: - makeFetchPhotosRequest
-
+    
     private func makeFetchPhotosRequest(nextPage: Int, token: String) -> URLRequest? {
         guard let url = URL(string: Constants.defaultPhotos + "?page=\(nextPage)"),
               let token = tokenStorage.token else {
@@ -133,7 +133,7 @@ final class ImagesListService {
     }
     
     // MARK: - makeFetchLikeRequest
-
+    
     private func makeFetchLikeRequest(isLiked: Bool, photoID: String, token: String) -> URLRequest? {
         guard let url = URL(string: Constants.defaultPhotos + "\(photoID)/like"),
               let token = tokenStorage.token else {
@@ -147,7 +147,7 @@ final class ImagesListService {
     }
     
     // MARK: - processServerResponse
-
+    
     private func processServerResponse(photoResult: [PhotoResult]) {
         let newPhotos = photoResult.map { Photo(from: $0) }
         photos.append(contentsOf: newPhotos)
