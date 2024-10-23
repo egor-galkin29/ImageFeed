@@ -108,4 +108,38 @@ final class WebViewTests: XCTestCase {
             // Then
             XCTAssertTrue(presenter.isViewDidLoadCalled)
         }
+    
+    // MARK: - ImagesList tests
+
+    func testImagesListViewControllerCallsViewDidLoad() {
+            
+            // Given
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let viewController = storyboard.instantiateViewController(withIdentifier: "ImagesListViewController") as! ImagesListViewController
+            let presenter = ImagesListPresenterSpy()
+            viewController.presenter = presenter
+            presenter.view = viewController
+            
+            //When
+            _ = viewController.view
+            
+            //Then
+            XCTAssertTrue(presenter.isViewDidLoadCall)
+        }
+    
+    func testCellHeight() {
+        //given
+        let presenter = ImagesListPresenterSpy()
+        presenter.stubPhotos = [
+            PhotoConfiguration(id: "1", size: CGSize(width: 100, height: 200), createdAt: Date(), welcomeDescription: "test", thumbImageURL: "url1", largeImageURL: "url2", isLiked: false
+                              )
+        ]
+        let tableView = UITableView(frame: CGRect(x: 0, y: 0, width: 320, height: 480))
+        
+        //when
+        let cellHeight = presenter.getCellHeight(tableView.bounds.width, 0)
+        
+        //then
+        XCTAssertEqual(cellHeight, 0)
+    }
 }

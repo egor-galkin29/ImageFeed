@@ -41,6 +41,7 @@ final class ProfileViewController: UIViewController & ProfileViewControllerProto
         let button = UIButton()
         button.setImage(UIImage(named: "log out"), for: .normal)
         button.tintColor = .ypRed
+        button.accessibilityIdentifier = "logout button"
         button.addTarget(self, action: #selector(didTapLogoutButton), for: .touchUpInside)
         return button
     }()
@@ -86,11 +87,13 @@ final class ProfileViewController: UIViewController & ProfileViewControllerProto
         createGradients()
         updateAvatar()
         
-        guard let profile = presenter?.getProfile() else { 
+        presenter?.viewDidLoad()
+        
+        guard let profile = presenter?.getProfile() else {
             print("профайла нет")
             return }
+        
         updateLableText(profile)
-        presenter?.viewDidLoad()
     }
     
     // MARK: - viewDidLayoutSubviews

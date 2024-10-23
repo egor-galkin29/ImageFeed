@@ -33,3 +33,36 @@ public struct Photo {
         self.isLiked = isLiked
     }
 }
+
+public struct PhotoConfiguration {
+    private let dateFormatter = DateConvertor.shared
+    
+    let id: String
+    let size: CGSize
+    let createdAt: Date?
+    let welcomeDescription: String?
+    let thumbImageURL: String
+    let largeImageURL: String
+    var isLiked: Bool
+    
+    init(id: String, size: CGSize, createdAt: Date?, welcomeDescription: String?, thumbImageURL: String, largeImageURL: String, isLiked: Bool) {
+        self.id = id
+        self.size = size
+        self.createdAt = createdAt
+        self.welcomeDescription = welcomeDescription
+        self.thumbImageURL = thumbImageURL
+        self.largeImageURL = largeImageURL
+        self.isLiked = isLiked
+    }
+    
+//    static var standart: PhotoConfiguration {
+//        return PhotoConfiguration(
+//            id: Photo.,
+//            size: <#T##CGSize#>,
+//            createdAt: <#T##Date?#>,
+//            welcomeDescription: <#T##String?#>,
+//            thumbImageURL: <#T##String#>,
+//            largeImageURL: <#T##String#>, 
+//            isLiked: <#T##Bool#>)
+//    }
+}
