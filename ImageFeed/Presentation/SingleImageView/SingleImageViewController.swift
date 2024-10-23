@@ -5,29 +5,19 @@ import Kingfisher
 
 final class SingleImageViewController: UIViewController {
     
-// MARK: - IBOutlet
-
+    // MARK: - IBOutlet
+    
     @IBOutlet private var scrollView: UIScrollView!
     @IBOutlet private var imageView: UIImageView!
     
-// MARK: - Public Properties
-
-//    var image: UIImage? {
-//        didSet {
-//            guard isViewLoaded, let image else { return }
-//            
-//            imageView.image = image
-//            imageView.frame.size = image.size
-//            rescaleAndCenterImageInScrollView(image: image)
-//        }
-//    }
+    // MARK: - Public Properties
+    
+    
     
     //var largeImageURL: URL?
     var photo: Photo?
     
     // MARK: - Public Methods
-        
-        // MARK: - viewDidLoad
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,22 +26,18 @@ final class SingleImageViewController: UIViewController {
         
         guard let photo else { return }
         loadImage(photo)
-//        guard let image else { return }
-//        imageView.image = image
-//        imageView.frame.size = image.size
-//        rescaleAndCenterImageInScrollView(image: image)
     }
     
-// MARK: - IBAction
-
+    // MARK: - IBAction
+    
     // MARK: - didTapBackButton
-
+    
     @IBAction private func didTapBackButton() {
         dismiss(animated: true, completion: nil)
     }
     
     // MARK: - didTapShareButton
-
+    
     @IBAction private func didTapShareButton(_ sender: UIButton) {
         guard let image = imageView.image else { return }
         let share = UIActivityViewController(
@@ -61,8 +47,8 @@ final class SingleImageViewController: UIViewController {
         present(share, animated: true, completion: nil)
     }
     
-// MARK: - Private Methods
-
+    // MARK: - Private Methods
+    
     private func rescaleAndCenterImageInScrollView() {
         let minZoomScale = scrollView.minimumZoomScale
         let maxZoomScale = scrollView.maximumZoomScale
@@ -93,26 +79,6 @@ extension SingleImageViewController: UIScrollViewDelegate {
 
 private extension SingleImageViewController {
     
-    // MARK: - loadImage
-
-//    func loadImage(_ photo: Photo) {
-//        let kf = KingfisherManager.shared
-//        imageView.image = UIImage(named: "Stub")
-//        UIBlockingProgressHUD.show()
-//        kf.retrieveImage(with: photo.largeImageURL) {result in
-//            UIBlockingProgressHUD.dismiss()
-//            
-//            switch result {
-//            case .success(let value):
-//                self.image = value.image
-//                print("Изображение успешно загружено: \(value.image)")
-//            case .failure(let error):
-//                print("Ошибка загрузки: \(error.localizedDescription)")
-//                self.showError(vc: self)
-//            }
-//        }
-//    }
-    
     func loadImage(_ photo: Photo) {
         imageView.image = UIImage(named: "Stub")
         UIBlockingProgressHUD.show()
@@ -130,8 +96,6 @@ private extension SingleImageViewController {
         }
         imageView.frame.size = photo.size
     }
-    
-    // MARK: - showError
     
     func showError(vc: SingleImageViewController, _ photo: Photo) {
         let alert = UIAlertController(

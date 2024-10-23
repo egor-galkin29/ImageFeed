@@ -4,9 +4,9 @@ import XCTest
 final class WebViewTests: XCTestCase {
     
     // MARK: - WebView tests
-
+    
     func testViewControllerCallsViewDidLoad() {
-       // given
+        // given
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let viewController = storyboard.instantiateViewController(withIdentifier: "WebViewViewController") as! WebViewViewController
         let presenter = WebViewPresenterSpy()
@@ -14,10 +14,10 @@ final class WebViewTests: XCTestCase {
         presenter.view = viewController
         
         //when
-            _ = viewController.view
-            
+        _ = viewController.view
+        
         //then
-        XCTAssertTrue(presenter.viewDidLoadCalled) //behaviour verification
+        XCTAssertTrue(presenter.viewDidLoadCalled)
     }
     
     func testPresenterCallsLoadRequest() {
@@ -94,38 +94,38 @@ final class WebViewTests: XCTestCase {
     }
     
     // MARK: - ProfileViewontroller tests
-
+    
     func testProfilePresenterViewDidLoadCalled() {
-            // Given
-                let viewController = ProfileViewController()
-                let presenter = ProfilePresenterSpy()
-                viewController.presenter = presenter
-                presenter.view = viewController
-            
-            // When
-            _ = viewController.view  // Это вызовет viewDidLoad у ProfileViewController
-            
-            // Then
-            XCTAssertTrue(presenter.isViewDidLoadCalled)
-        }
+        // Given
+        let viewController = ProfileViewController()
+        let presenter = ProfilePresenterSpy()
+        viewController.presenter = presenter
+        presenter.view = viewController
+        
+        // When
+        _ = viewController.view
+        
+        // Then
+        XCTAssertTrue(presenter.isViewDidLoadCalled)
+    }
     
     // MARK: - ImagesList tests
-
+    
     func testImagesListViewControllerCallsViewDidLoad() {
-            
-            // Given
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let viewController = storyboard.instantiateViewController(withIdentifier: "ImagesListViewController") as! ImagesListViewController
-            let presenter = ImagesListPresenterSpy()
-            viewController.presenter = presenter
-            presenter.view = viewController
-            
-            //When
-            _ = viewController.view
-            
-            //Then
-            XCTAssertTrue(presenter.isViewDidLoadCall)
-        }
+        
+        // Given
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let viewController = storyboard.instantiateViewController(withIdentifier: "ImagesListViewController") as! ImagesListViewController
+        let presenter = ImagesListPresenterSpy()
+        viewController.presenter = presenter
+        presenter.view = viewController
+        
+        //When
+        _ = viewController.view
+        
+        //Then
+        XCTAssertTrue(presenter.isViewDidLoadCall)
+    }
     
     func testCellHeight() {
         //given

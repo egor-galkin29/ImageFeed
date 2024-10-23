@@ -19,22 +19,22 @@ public protocol WebViewViewControllerProtocol: AnyObject {
 
 final class WebViewViewController: UIViewController & WebViewViewControllerProtocol {
     
-// MARK: - IBOutlet
-
+    // MARK: - IBOutlet
+    
     @IBOutlet private var webView: WKWebView!
     @IBOutlet weak var progressView: UIProgressView!
-   
-// MARK: - Public Properties
-
+    
+    // MARK: - Public Properties
+    
     weak var delegate: WebViewViewControllerDelegate?
     var presenter: WebViewPresenterProtocol?
     
-// MARK: - Private Properties
-
+    // MARK: - Private Properties
+    
     private var estimatedProgressObservation: NSKeyValueObservation?
-
-// MARK: - Public Methods
-
+    
+    // MARK: - Public Methods
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         webView.navigationDelegate = self
@@ -53,12 +53,12 @@ final class WebViewViewController: UIViewController & WebViewViewControllerProto
         webView.load(request)
     }
     
-// MARK: - Private Methods
-
+    // MARK: - Private Methods
+    
     func setProgressValue(_ newValue: Float) {
         progressView.progress = newValue
     }
-
+    
     func setProgressHidden(_ isHidden: Bool) {
         progressView.isHidden = isHidden
     }
@@ -69,7 +69,7 @@ final class WebViewViewController: UIViewController & WebViewViewControllerProto
 extension WebViewViewController: WKNavigationDelegate {
     
     // MARK: - webView
-
+    
     func webView(
         _ webView: WKWebView,
         decidePolicyFor navigationAction: WKNavigationAction,
@@ -83,7 +83,7 @@ extension WebViewViewController: WKNavigationDelegate {
             decisionHandler(.allow)
         }
     }
-
+    
     private func code(from navigationAction: WKNavigationAction) -> String? {
         if let url = navigationAction.request.url {
             return presenter?.code(from: url)

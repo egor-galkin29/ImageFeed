@@ -5,7 +5,7 @@ public protocol ProfilePresenterProtocol: AnyObject {
     func viewDidLoad()
     func getProfile() -> Profile?
     func getAvatarURL() -> URL?
-   
+    
 }
 
 final class ProfilePresenter: ProfilePresenterProtocol {

@@ -54,15 +54,4 @@ public struct PhotoConfiguration {
         self.largeImageURL = largeImageURL
         self.isLiked = isLiked
     }
-    
-//    static var standart: PhotoConfiguration {
-//        return PhotoConfiguration(
-//            id: Photo.,
-//            size: <#T##CGSize#>,
-//            createdAt: <#T##Date?#>,
-//            welcomeDescription: <#T##String?#>,
-//            thumbImageURL: <#T##String#>,
-//            largeImageURL: <#T##String#>, 
-//            isLiked: <#T##Bool#>)
-//    }
 }

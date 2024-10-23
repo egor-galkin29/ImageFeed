@@ -122,9 +122,9 @@ final class ProfileViewController: UIViewController & ProfileViewControllerProto
     }
     
     func configure(_ presenter: ProfilePresenterProtocol) {
-            self.presenter = presenter
-            self.presenter?.view = self
-        }
+        self.presenter = presenter
+        self.presenter?.view = self
+    }
     
     // MARK: - showLogoutAlert
     
@@ -149,13 +149,13 @@ final class ProfileViewController: UIViewController & ProfileViewControllerProto
     }
     
     // MARK: - Private Methods
-        
-        func updateAvatar() {
-            let url = presenter?.getAvatarURL()
-            imageView.kf.setImage(with: url)
     
-            removeGradients()
-        }
+    func updateAvatar() {
+        let url = presenter?.getAvatarURL()
+        imageView.kf.setImage(with: url)
+        
+        removeGradients()
+    }
     
     // MARK: - setupView
     

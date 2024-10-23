@@ -13,6 +13,6 @@ final class ImagesListPresenterSpy: ImageListPresenterProtocol {
     func getCellHeight(_ tableViewBoundsWidth: CGFloat, _ photoIndex: Int) -> CGFloat { return 0 }
     
     func loadImages() {}
-
+    
     func updateTableViewAnimated() {}
 }

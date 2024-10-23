@@ -32,15 +32,15 @@ final class ImageListPresenter: ImageListPresenterProtocol {
     }
     
     func updateTableViewAnimated() {
-            let oldCount = self.photos.count
-            let newCount = self.imageListService.photos.count
-            if oldCount != newCount {
-                self.photos = self.imageListService.photos
-                let indexPaths = (oldCount..<newCount).map { i in
-                    IndexPath(row: i, section: 0)
-                }
-                view?.updateTableViewAnimated(indexPaths)
+        let oldCount = self.photos.count
+        let newCount = self.imageListService.photos.count
+        if oldCount != newCount {
+            self.photos = self.imageListService.photos
+            let indexPaths = (oldCount..<newCount).map { i in
+                IndexPath(row: i, section: 0)
             }
+            view?.updateTableViewAnimated(indexPaths)
+        }
     }
     
     func getCellHeight(_ tableViewBoundsWidth: CGFloat, _ photoIndex: Int) -> CGFloat {
