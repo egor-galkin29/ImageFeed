@@ -22,18 +22,18 @@ final class ProfileService {
     static let shared = ProfileService()
     private init() {}
     
-// MARK: - Private Properties
-
+    // MARK: - Private Properties
+    
     private(set) var profile: Profile?
     
     private let urlSession = URLSession.shared
     private var task: URLSessionTask?
     private var lastToken: String?
-   
-// MARK: - Private Methods
-
+    
+    // MARK: - Private Methods
+    
     // MARK: - makeURLRequest
-
+    
     private func makeURLRequest(token: String) -> URLRequest? {
         guard let url = URL(string: "https://api.unsplash.com/me") else {
             return nil
@@ -46,7 +46,7 @@ final class ProfileService {
     }
     
     // MARK: - fetchProfile
-
+    
     func fetchProfile(_ token: String, completion: @escaping (Result<Profile, Error>) -> Void) {
         
         assert(Thread.isMainThread)
@@ -94,7 +94,7 @@ final class ProfileService {
     }
     
     // MARK: - cleanProfile
-
+    
     func cleanProfile() {
         profile = nil
     }

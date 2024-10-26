@@ -6,22 +6,22 @@ final class ProfileImageService {
     static let shared = ProfileImageService()
     private init() {}
     
-// MARK: - Public Properties
+    // MARK: - Public Properties
     
     static let didChangeNotification = Notification.Name(rawValue: "ProfileImageProviderDidChange")
     let storage = OAuth2TokenStorage()
     
-// MARK: - Private Properties
+    // MARK: - Private Properties
     
     private (set) var avatarURL: String?
     private let urlSession = URLSession.shared
     private var task: URLSessionTask?
     private var lastUsername: String?
     
-// MARK: - Public Methods
-
+    // MARK: - Public Methods
+    
     // MARK: - fetchProfileImageURL
-
+    
     func fetchProfileImageURL(username: String, _ completion: @escaping (Result<String, Error>) -> Void) {
         assert(Thread.isMainThread)
         guard lastUsername != username else {
@@ -75,13 +75,13 @@ final class ProfileImageService {
     }
     
     // MARK: - cleanAvatar
-
+    
     func cleanAvatar() {
         avatarURL = nil
     }
-
-// MARK: - Private Methods
-
+    
+    // MARK: - Private Methods
+    
     private func makeProfileImageRequest(username: String) -> URLRequest? {
         guard let baseURL = URL(string: "https://api.unsplash.com") else {
             assertionFailure("Failed to create URL")
