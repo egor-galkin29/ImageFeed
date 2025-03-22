@@ -1,8 +1,8 @@
 # Image Feed
 
 ## Links
-- **Design in Figma**: [link]
-- **Unsplash API**: [link]
+- **Design in Figma**: [https://www.figma.com/design/Y8jmksdf2qxOUmLEt1Afth/Image-Feed?node-id=0-1]
+- **Unsplash API**: [https://unsplash.com/documentation]
 
 ## Purpose and Goals
 **Image Feed** is a multi-page application designed for viewing images via the Unsplash API.
